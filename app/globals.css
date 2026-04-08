@@ -1,0 +1,412 @@
+
+/* DM Sans font import for global use */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Webkit thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #faf7f0;
+  font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+
+p {
+  margin: 0;
+}
+
+@keyframes instituteGlowDrift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+}
+
+@keyframes instituteFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.institute-art-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 20% 24%, rgba(251, 191, 36, 0.32), transparent 40%),
+    radial-gradient(circle at 78% 72%, rgba(30, 41, 59, 0.24), transparent 42%),
+    linear-gradient(138deg, #fff7e4 0%, #fff 48%, #f0f4ff 100%);
+}
+
+.institute-art-orb {
+  position: absolute;
+  z-index: 1;
+  border-radius: 9999px;
+  filter: blur(36px);
+  opacity: 0.65;
+  animation: instituteGlowDrift 8s ease-in-out infinite;
+}
+
+.institute-art-orb--amber {
+  left: 7%;
+  top: 12%;
+  height: 11rem;
+  width: 11rem;
+  background: rgba(251, 190, 36, 0.323);
+}
+
+.institute-art-orb--slate {
+  right: 8%;
+  bottom: 8%;
+  height: 10rem;
+  width: 10rem;
+  animation-delay: -2.6s;
+  background: rgba(30, 41, 59, 0.45);
+}
+
+.institute-image-shell {
+  position: relative;
+  z-index: 2;
+  margin: .5rem ;
+  width: 100%;
+
+  border-radius: 5px;
+  /* border: 1px solid rgba(255, 255, 255, 0); */
+  background: rgba(255, 255, 255, 0);
+  /* box-shadow:
+    0 24px 40px rgba(15, 23, 42, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0); */
+  /* backdrop-filter: blur(9px); */
+  /* animation: instituteFloat 5.2s ease-in-out infinite; */
+}
+
+.institute-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* ── About Owner / Teacher Section ─────────────────────────────── */
+
+.owner-section {
+  position: relative;
+  overflow: hidden;
+  background: #09090b;
+;
+}
+
+.owner-mesh-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #09090b 0%,
+    #111118 25%,
+    #0f0f16 50%,
+    #0b0b10 75%,
+    #09090b 100%
+  );
+  background-size: 300% 300%;
+  animation: ownerMeshDrift 14s ease-in-out infinite;
+}
+
+.owner-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  pointer-events: none;
+}
+.owner-orb--gold {
+  width: 36rem; height: 36rem;
+  top: -8rem; left: -8rem;
+  background: radial-gradient(circle, rgba(251,191,36,0.22) 0%, transparent 70%);
+  animation: ownerOrbPulse 7s ease-in-out infinite;
+}
+.owner-orb--violet {
+  width: 28rem; height: 28rem;
+  bottom: -6rem; right: -6rem;
+  background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+  animation: ownerOrbPulse 9s ease-in-out infinite;
+  animation-delay: -3s;
+}
+.owner-orb--slate {
+  width: 20rem; height: 20rem;
+  top: 40%; left: 45%;
+  background: radial-gradient(circle, rgba(30,41,59,0.55) 0%, transparent 70%);
+  animation: ownerOrbPulse 11s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+
+.owner-grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Image column */
+.owner-image-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.owner-image-wrapper {
+  position: relative;
+  display: inline-block;
+  animation: ownerImageFloat 5.5s ease-in-out infinite;
+}
+
+.owner-image-ring {
+  position: relative;
+  animation: ownerRingGlow 3.5s ease-in-out infinite;
+}
+
+.owner-image-inner {
+ 
+  overflow: hidden;
+  width: 500px;
+  height: 600px;
+  position: relative;
+  background: #1a1a24;
+}
+.owner-image-inner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 70%
+  );
+
+}
+
+.owner-image-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.owner-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #1a1a24 0%, #22223a 100%);
+}
+.owner-image-placeholder-icon {
+  width: 72px;
+  height: 72px;
+ 
+  background: rgba(251,191,36,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.owner-image-placeholder-text {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.owner-badge {
+  position: absolute;
+  bottom: -0.5rem;
+  right: -0.75rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #09090b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: 2px solid #09090b;
+  white-space: nowrap;
+  animation: ownerBadgePop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
+}
+
+/* Content column */
+.owner-content-col {
+  animation: ownerFadeSlideUp 0.7s ease-out both;
+}
+
+.owner-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  margin-bottom: 1.25rem;
+}
+.owner-eyebrow-line {
+  display: inline-block;
+  width: 2.25rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #fbbf24, transparent);
+}
+
+.owner-name {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem 0;
+}
+.owner-name-highlight {
+  background: linear-gradient(90deg, #fbbf24 0%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.owner-title {
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 2rem 0;
+  letter-spacing: 0.02em;
+}
+
+.owner-divider {
+  width: 3.5rem;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+  margin-bottom: 1.75rem;
+}
+
+.owner-bio {
+  font-size: 0.97rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.62);
+  margin: 0 0 2rem 0;
+}
+.owner-bio strong {
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+}
+
+.owner-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.owner-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  transition: background 0.25s, border-color 0.25s;
+}
+.owner-stat:hover {
+  background: rgba(251,191,36,0.07);
+  border-color: rgba(251,191,36,0.25);
+}
+
+.owner-stat-number {
+  display: block;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #fbbf24;
+  line-height: 1.2;
+}
+.owner-stat-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+.owner-quote {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid #fbbf24;
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.25rem;
+}
+.owner-quote-text {
+  font-size: 0.88rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .owner-stats { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .owner-stat-number { font-size: 1.3rem; }
+  .owner-image-inner { width: 400px; height: 400px; }
+}
