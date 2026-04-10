@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { getOrganizationSchema, getWebsiteSchema, siteConfig } from "../lib/seo";
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     locale: siteConfig.locale,
     images: [
       {
-        url: `${siteConfig.url}/icon.svg`,
+        url: `${siteConfig.url}`,
         width: 1200,
         height: 630,
         alt: siteConfig.name,
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Defacto Institute | Coaching Classes in Bhaniawala, Dehradun",
     description: siteConfig.description,
-    images: [`${siteConfig.url}/icon.svg`],
+    images: [`${siteConfig.url}`],
   },
   robots: {
     index: true,
@@ -59,11 +60,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
       "max-video-preview": -1,
     },
-  },
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
   },
 };
 
@@ -88,6 +84,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
+        <Analytics />
       </body>
     </html>
   );

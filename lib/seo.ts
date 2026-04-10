@@ -52,7 +52,7 @@ export function buildMetadata({
   description,
   path = "/",
   keywords = [],
-  image = "/icon.svg",
+  image = "https://res.cloudinary.com/dsks5swu1/image/upload/v1775565407/erp_uploads/xcoemwx25dr8gcjkm4ha.png",
   type = "website",
 }: MetadataInput): Metadata {
   const canonical = absoluteUrl(path);

@@ -1,5 +1,4 @@
-import React from "react";
-import { getCloudinarySrcSet, getOptimizedImageUrl } from "../lib/image-utils";
+import Image from "next/image";
 
 interface BrandLogoProps {
   className?: string;
@@ -8,19 +7,18 @@ interface BrandLogoProps {
 }
 
 const BrandLogo = ({ className = "", variant = "dark", showText = true }: BrandLogoProps) => {
-  // Once the image link is provided, replace null with the URL string
   const logoImageUrl = "https://res.cloudinary.com/dmswb6fya/image/upload/v1775635083/erp_uploads/fwp2aeerokjfljm2aw2a.png";
 
   if (logoImageUrl) {
     return (
-      <img
-        src={getOptimizedImageUrl(logoImageUrl, { width: 240 })}
-        srcSet={getCloudinarySrcSet(logoImageUrl, [120, 180, 240, 320])}
-        sizes="160px"
+      <Image
+        src={logoImageUrl}
         alt="Defacto Institute Logo"
+        width={2560}
+        height={596}
+        sizes="(max-width: 640px) 128px, 160px"
         className={`h-10 w-auto ${className}`}
-        decoding="async"
-        fetchPriority="high"
+        priority
       />
     );
   }

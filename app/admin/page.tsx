@@ -14,6 +14,9 @@ import BrandLogo from "../../components/BrandLogo";
 
 const FacultyAdmin = dynamic(() => import("../../components/FacultyAdmin"), { ssr: false });
 const GalleryAdmin = dynamic(() => import("../../components/GalleryAdmin"), { ssr: false });
+const CourseChaptersAdmin = dynamic(() => import("../../components/CourseChaptersAdmin"), {
+  ssr: false,
+});
 const AdminSecurityPanel = dynamic(() => import("../../components/AdminSecurityPanel"), {
   ssr: false,
 });
@@ -223,6 +226,20 @@ export default function AdminPage() {
       ),
     },
     {
+      id: "courses",
+      label: "Chapter Tracker",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 6.253v13m0-13C10.832 5.477 8.565 5 6 5c-1.776 0-3.395.23-4.623.62A1 1 0 001 6.576v11.048a1 1 0 001.316.949C3.45 18.22 4.68 18 6 18c2.565 0 4.832.477 6 1.253m0-13C13.168 5.477 15.435 5 18 5c1.776 0 3.395.23 4.623.62A1 1 0 0123 6.576v11.048a1 1 0 01-1.316.949C20.55 18.22 19.32 18 18 18c-2.565 0-4.832.477-6 1.253"
+          />
+        </svg>
+      ),
+    },
+    {
       id: "security",
       label: "Security",
       icon: (
@@ -405,6 +422,7 @@ export default function AdminPage() {
 
           {activeTab === "faculty" && <FacultyAdmin />}
           {activeTab === "gallery" && <GalleryAdmin />}
+          {activeTab === "courses" && <CourseChaptersAdmin />}
           {activeTab === "security" && <AdminSecurityPanel />}
         </main>
       </div>

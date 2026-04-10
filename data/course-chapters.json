@@ -1,0 +1,157 @@
+{
+  "catalog": {
+    "courses": [
+      {
+        "courseSlug": "class-4-to-8-all-subjects",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Science",
+            "chapters": []
+          },
+          {
+            "subjectName": "English",
+            "chapters": []
+          },
+          {
+            "subjectName": "Social Studies",
+            "chapters": []
+          },
+          {
+            "subjectName": "Hindi",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-9-cbse",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-9-icse",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-10-cbse",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-10-icse",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-11-science",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      },
+      {
+        "courseSlug": "class-12-science",
+        "subjects": [
+          {
+            "subjectName": "Mathematics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Physics",
+            "chapters": []
+          },
+          {
+            "subjectName": "Chemistry",
+            "chapters": []
+          },
+          {
+            "subjectName": "Biology",
+            "chapters": []
+          }
+        ]
+      }
+    ]
+  }
+}

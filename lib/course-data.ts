@@ -15,6 +15,45 @@ export interface Course {
 
 export const COURSES_DATA: Course[] = [
   {
+    id: "c4-8-all",
+    slug: "class-4-to-8-all-subjects",
+    title: "Class 4 to 8",
+    variant: "All Subjects",
+    description:
+      "Complete academic support for Classes 4 to 8 across all major school subjects, with concept-building, homework guidance, and regular progress checks.",
+    subjects: ["Mathematics", "Science", "English", "Social Studies", "Hindi"],
+    accentColor: "from-cyan-500 to-sky-600",
+    lightBg: "bg-cyan-50",
+    iconColor: "text-cyan-600",
+    headerImageUrl:
+      "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&q=80&w=1600",
+    teachers: [
+      {
+        name: "Mr. Gopal Negi",
+        designation: "Foundation Program Mentor",
+        imageUrl:
+          "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
+      },
+      {
+        name: "Mrs. Meera Joshi",
+        designation: "Primary & Middle School Specialist",
+        imageUrl:
+          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
+      },
+    ],
+    results: {
+      year: "2024-25",
+      highlight:
+        "Strong class performance with visible improvement in fundamentals, confidence, and school exam readiness.",
+      percentage: "95%",
+      stats: [
+        { label: "Students Improved", value: "40+" },
+        { label: "Core Subjects", value: "5" },
+        { label: "Parent Satisfaction", value: "98%" },
+      ],
+    },
+  },
+  {
     id: "c9-cbse",
     slug: "class-9-cbse",
     title: "Class 9",

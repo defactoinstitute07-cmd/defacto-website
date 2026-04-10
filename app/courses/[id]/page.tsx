@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import CourseChapterTracker from "../../../components/CourseChapterTracker";
+import { getPublicCourseChapterCatalog } from "../../../lib/course-chapters";
 import { COURSES_DATA } from "../../../lib/course-data";
 import { getCloudinarySrcSet, getOptimizedImageUrl } from "../../../lib/image-utils";
 import { buildMetadata } from "../../../lib/seo";
@@ -44,6 +46,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     notFound();
   }
 
+  const chapterCatalog = await getPublicCourseChapterCatalog();
+  const courseChapterRecord =
+    chapterCatalog.courses.find((item) => item.courseSlug === course.slug) ?? {
+      courseSlug: course.slug,
+      subjects: course.subjects.map((subjectName) => ({
+        subjectName,
+        chapters: [],
+      })),
+    };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -72,7 +84,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
           </Link>
           <div className="max-w-3xl">
             <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-[0.2em] uppercase bg-white/20 rounded-full border border-white/30 backdrop-blur-sm mb-6">
-              {course.variant} Edition • Admissions Open 2026
+              {course.variant} Edition / Admissions Open 2026
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
               {course.title} <span className="text-white/70">Complete Package</span>
@@ -122,6 +134,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 ))}
               </div>
             </div>
+
+            <CourseChapterTracker subjects={courseChapterRecord.subjects} />
 
             {/* Teaching Faculty */}
             <div>
