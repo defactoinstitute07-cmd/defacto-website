@@ -3,30 +3,42 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createDefaultCourseChapterCatalog } from "../lib/course-chapters-schema";
 import { COURSES_DATA } from "../lib/course-data";
+export type FacultyMember = {
+  id: string;
+  name: string;
+};
 import type {
-  ChapterStatus,
   CourseChapterCatalog,
   SubjectChapterRecord,
 } from "../lib/course-chapters.types";
 
-function createChapterId() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-
-  return `chapter-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
 export default function CourseChaptersAdmin() {
   const [catalog, setCatalog] = useState<CourseChapterCatalog>(createDefaultCourseChapterCatalog());
+  const [faculty, setFaculty] = useState<FacultyMember[]>([]);
   const [selectedCourseSlug, setSelectedCourseSlug] = useState(COURSES_DATA[0]?.slug ?? "");
   const [statusMessage, setStatusMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    void fetchCatalog();
+    async function init() {
+      await Promise.all([fetchCatalog(), fetchFaculty()]);
+      setIsLoading(false);
+    }
+    void init();
   }, []);
+
+  async function fetchFaculty() {
+    try {
+      const response = await fetch("/api/faculty", { cache: "no-store" });
+      const payload = (await response.json()) as { faculty?: FacultyMember[] };
+      if (response.ok && payload.faculty) {
+        setFaculty(payload.faculty);
+      }
+    } catch {
+      console.error("Failed to load faculty list for assignments.");
+    }
+  }
 
   async function fetchCatalog() {
     try {
@@ -73,71 +85,54 @@ export default function CourseChaptersAdmin() {
     setSelectedCourseSlug(catalog.courses[0].courseSlug);
   }, [catalog.courses, selectedCourse]);
 
+  function updateCourse(
+    courseSlug: string,
+    updater: (course: any) => any,
+  ) {
+    setCatalog((current) => ({
+      courses: current.courses.map((course) =>
+        course.courseSlug !== courseSlug ? course : updater(course),
+      ),
+    }));
+  }
+
+  function handleBatchTeacherChange(courseSlug: string, teacherIds: string[]) {
+    updateCourse(courseSlug, (course) => ({
+      ...course,
+      assignedTeacherIds: teacherIds,
+    }));
+  }
+
   function updateSubject(
     courseSlug: string,
     subjectName: string,
     updater: (subject: SubjectChapterRecord) => SubjectChapterRecord,
   ) {
-    setCatalog((current) => ({
-      courses: current.courses.map((course) =>
-        course.courseSlug !== courseSlug
-          ? course
-          : {
-              ...course,
-              subjects: course.subjects.map((subject) =>
-                subject.subjectName !== subjectName ? subject : updater(subject),
-              ),
-            },
+    updateCourse(courseSlug, (course) => ({
+      ...course,
+      subjects: course.subjects.map((subject: SubjectChapterRecord) =>
+        subject.subjectName !== subjectName ? subject : updater(subject),
       ),
     }));
   }
 
-  function handleAddChapter(courseSlug: string, subjectName: string) {
-    updateSubject(courseSlug, subjectName, (subject) => ({
-      ...subject,
-      chapters: [
-        ...subject.chapters,
-        {
-          id: createChapterId(),
-          title: "",
-          status: "ongoing",
-        },
-      ],
-    }));
-  }
-
-  function handleChapterTitleChange(
+  function updateResults(
     courseSlug: string,
-    subjectName: string,
-    chapterId: string,
-    title: string,
+    updater: (results: any) => any,
   ) {
-    updateSubject(courseSlug, subjectName, (subject) => ({
-      ...subject,
-      chapters: subject.chapters.map((chapter) =>
-        chapter.id === chapterId ? { ...chapter, title } : chapter,
-      ),
-    }));
+    updateCourse(courseSlug, (course) => {
+      const currentResults = course.results || { year: "", percentage: "", highlight: "", stats: [] };
+      return {
+        ...course,
+        results: updater(currentResults),
+      };
+    });
   }
 
-  function handleStatusChange(
-    courseSlug: string,
-    subjectName: string,
-    chapterId: string,
-    status: ChapterStatus,
-  ) {
+  function handleTeacherChange(courseSlug: string, subjectName: string, teacherId: string) {
     updateSubject(courseSlug, subjectName, (subject) => ({
       ...subject,
-      chapters: subject.chapters.map((chapter) =>
-        chapter.id === chapterId ? { ...chapter, status } : chapter,
-      ),
-    }));
-  }
-
-  function handleRemoveChapter(courseSlug: string, subjectName: string, chapterId: string) {
-    updateSubject(courseSlug, subjectName, (subject) => ({
-      ...subject,
-      chapters: subject.chapters.filter((chapter) => chapter.id !== chapterId),
+      assignedTeacherId: teacherId || null,
     }));
   }
 
@@ -169,9 +164,9 @@ export default function CourseChaptersAdmin() {
       }
 
       setStatusMessage(
-        payload.storage === "local"
-          ? "Chapter tracker saved locally."
-          : "Chapter tracker updated successfully.",
+        payload.storage === "mongodb"
+          ? "Assignments saved successfully to MongoDB."
+          : "Assignments updated successfully.",
       );
     } catch {
       setStatusMessage("Failed to save chapter tracker.");
@@ -189,15 +184,15 @@ export default function CourseChaptersAdmin() {
   }
 
   return (
-    <section className="mx-auto max-w-6xl py-8 text-slate-100">
+    <section className="mx-auto max-w-6xl py-8 px-4 sm:px-6 text-slate-900">
       <form
         onSubmit={handleSave}
-        className="overflow-hidden rounded-[2rem] border border-white/5 bg-slate-900/50 shadow-2xl backdrop-blur-xl"
+        className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white/80 shadow-xl backdrop-blur-xl transition-all hover:bg-white"
       >
-        <div className="border-b border-white/5 px-8 py-7">
+        <div className="border-b border-slate-200 px-6 sm:px-8 py-7">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <div className="mb-4 inline-flex rounded-2xl bg-amber-400/10 p-3 text-amber-400">
+              <div className="mb-4 inline-flex rounded-2xl bg-amber-100 p-3 text-amber-600">
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -207,30 +202,29 @@ export default function CourseChaptersAdmin() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-white">Chapter Tracker</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                Add chapters under each subject and mark every chapter as either ongoing or
-                completed. The course pages will use these statuses for the public filters.
+              <h2 className="text-2xl font-bold text-slate-900">Course Management</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                Manage faculty assignments and academic performance results (Academic Excellence) per course batch.
               </p>
             </div>
 
             <button
               type="submit"
               disabled={isSaving}
-              className="inline-flex items-center justify-center rounded-2xl bg-amber-400 px-6 py-3 text-sm font-black text-slate-950 shadow-xl shadow-amber-400/10 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center justify-center rounded-2xl bg-amber-400 px-6 py-3 text-sm font-black text-slate-900 shadow-lg shadow-amber-400/20 transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:grayscale"
             >
-              {isSaving ? "Saving..." : "Save Chapter Tracker"}
+              {isSaving ? "Saving..." : "Save Assignments"}
             </button>
           </div>
 
           {statusMessage && (
-            <div className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm font-bold text-amber-200">
+            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800 shadow-sm">
               {statusMessage}
             </div>
           )}
         </div>
 
-        <div className="border-b border-white/5 px-8 py-6">
+        <div className="border-b border-slate-200 bg-slate-50/50 px-6 sm:px-8 py-6">
           <div className="flex flex-wrap gap-3">
             {COURSES_DATA.map((course) => {
               const isActive = course.slug === selectedCourse?.courseSlug;
@@ -240,17 +234,15 @@ export default function CourseChaptersAdmin() {
                   key={course.slug}
                   type="button"
                   onClick={() => setSelectedCourseSlug(course.slug)}
-                  className={`rounded-2xl border px-4 py-3 text-left transition ${
-                    isActive
-                      ? "border-amber-400/20 bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/10"
-                      : "border-white/5 bg-slate-800/50 text-slate-300 hover:border-white/10 hover:bg-slate-800"
-                  }`}
+                  className={`rounded-2xl border px-5 py-3 text-left transition-all shadow-sm ${isActive
+                    ? "border-amber-400 bg-amber-400 text-slate-900 shadow-md shadow-amber-400/20 scale-[1.02]"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
                 >
                   <div className="text-sm font-black">{course.title}</div>
                   <div
-                    className={`text-xs font-bold uppercase tracking-[0.18em] ${
-                      isActive ? "text-slate-900/70" : "text-slate-500"
-                    }`}
+                    className={`mt-0.5 text-xs font-bold uppercase tracking-[0.18em] ${isActive ? "text-slate-900/70" : "text-slate-400"
+                      }`}
                   >
                     {course.variant}
                   </div>
@@ -260,144 +252,194 @@ export default function CourseChaptersAdmin() {
           </div>
         </div>
 
-        <div className="px-8 py-8">
+        <div className="px-4 sm:px-8 py-8">
           {selectedCourse && selectedCourseMeta ? (
             <div className="space-y-6">
-              <div className="flex flex-col gap-3 rounded-[1.75rem] border border-white/5 bg-slate-950/40 px-6 py-5 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-white">
+              <div className="flex flex-col gap-3 rounded-[1.75rem] border border-slate-200 bg-white px-6 py-5 md:flex-row md:items-center md:justify-between shadow-sm">
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-slate-900">
                     {selectedCourseMeta.title} {selectedCourseMeta.variant}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-400">
-                    {selectedCourse.subjects.reduce(
-                      (count, subject) => count + subject.chapters.length,
-                      0,
-                    )}{" "}
-                    chapters configured across {selectedCourse.subjects.length} subjects.
-                  </p>
+                  <div className="mt-4">
+                    <label className="block text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-2">
+                      Batch Faculty Members
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {faculty.map((member) => {
+                        const isAssigned = (selectedCourse as any).assignedTeacherIds?.includes(member.id);
+                        return (
+                          <button
+                            key={member.id}
+                            type="button"
+                            onClick={() => {
+                              const currentIds = (selectedCourse as any).assignedTeacherIds || [];
+                              const nextIds = isAssigned
+                                ? currentIds.filter((id: string) => id !== member.id)
+                                : [...currentIds, member.id];
+                              handleBatchTeacherChange(selectedCourse.courseSlug, nextIds);
+                            }}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${isAssigned
+                              ? "bg-amber-400 border-amber-400 text-slate-900"
+                              : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                              }`}
+                          >
+                            {member.name}
+                          </button>
+                        );
+                      })}
+                      {faculty.length === 0 && (
+                        <p className="text-xs text-slate-400 italic">No faculty available to assign.</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <p className="max-w-xl text-sm leading-6 text-slate-500">
-                  Keep chapter names short and clear. Visitors will be able to filter these
-                  chapters by subject and status on the course details page.
+                  Select a faculty member for each individual subject if necessary.
+                  These subject-level assignments override the batch-level assignments.
                 </p>
               </div>
 
               <div className="grid gap-6 xl:grid-cols-2">
                 {selectedCourse.subjects.map((subject) => {
-                  const ongoingCount = subject.chapters.filter(
-                    (chapter) => chapter.status === "ongoing",
-                  ).length;
-                  const completedCount = subject.chapters.length - ongoingCount;
-
                   return (
                     <div
                       key={subject.subjectName}
-                      className="rounded-[1.75rem] border border-white/5 bg-slate-950/40 p-6"
+                      className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md"
                     >
-                      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div>
-                          <h4 className="text-lg font-bold text-white">{subject.subjectName}</h4>
-                          <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                            {ongoingCount} ongoing / {completedCount} completed
-                          </p>
+                      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-lg font-bold text-slate-900 truncate">{subject.subjectName}</h4>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAddChapter(selectedCourse.courseSlug, subject.subjectName)
-                          }
-                          className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:border-white/20 hover:bg-white/10"
-                        >
-                          Add Chapter
-                        </button>
-                      </div>
-
-                      <div className="space-y-3">
-                        {subject.chapters.length ? (
-                          subject.chapters.map((chapter, index) => (
-                            <div
-                              key={chapter.id}
-                              className="rounded-2xl border border-white/5 bg-slate-900/70 p-4"
-                            >
-                              <div className="mb-3 flex items-center justify-between">
-                                <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                                  Chapter {index + 1}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleRemoveChapter(
-                                      selectedCourse.courseSlug,
-                                      subject.subjectName,
-                                      chapter.id,
-                                    )
-                                  }
-                                  className="text-[11px] font-black uppercase tracking-[0.16em] text-rose-400 transition hover:text-rose-300"
-                                >
-                                  Remove
-                                </button>
-                              </div>
-
-                              <div className="space-y-3">
-                                <input
-                                  value={chapter.title}
-                                  onChange={(event) =>
-                                    handleChapterTitleChange(
-                                      selectedCourse.courseSlug,
-                                      subject.subjectName,
-                                      chapter.id,
-                                      event.target.value,
-                                    )
-                                  }
-                                  placeholder="Enter chapter title"
-                                  className="w-full rounded-2xl border border-white/5 bg-slate-800/50 px-4 py-3 text-sm font-medium text-white outline-none transition focus:border-amber-400/40 focus:ring-4 focus:ring-amber-400/10"
-                                />
-
-                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                  <select
-                                    value={chapter.status}
-                                    onChange={(event) =>
-                                      handleStatusChange(
-                                        selectedCourse.courseSlug,
-                                        subject.subjectName,
-                                        chapter.id,
-                                        event.target.value as ChapterStatus,
-                                      )
-                                    }
-                                    className="rounded-2xl border border-white/5 bg-slate-800/50 px-4 py-3 text-sm font-bold text-white outline-none transition focus:border-amber-400/40 focus:ring-4 focus:ring-amber-400/10"
-                                  >
-                                    <option value="ongoing">Ongoing</option>
-                                    <option value="completed">Completed</option>
-                                  </select>
-
-                                  <div
-                                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.16em] ${
-                                      chapter.status === "completed"
-                                        ? "bg-emerald-400/10 text-emerald-300"
-                                        : "bg-amber-400/10 text-amber-300"
-                                    }`}
-                                  >
-                                    {chapter.status}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 px-4 py-5 text-sm text-slate-500">
-                            No chapters added yet for {subject.subjectName}. Use "Add Chapter" to
-                            create one and set its status.
+                        <div className="relative min-w-[200px]">
+                          <select
+                            value={subject.assignedTeacherId || ""}
+                            onChange={(e) =>
+                              handleTeacherChange(
+                                selectedCourse.courseSlug,
+                                subject.subjectName,
+                                e.target.value,
+                              )
+                            }
+                            className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2 pr-10 text-xs font-bold text-slate-700 outline-none transition hover:border-slate-300 focus:border-amber-400 focus:ring-4 focus:ring-amber-400/10"
+                          >
+                            <option value="">No specific faculty</option>
+                            {faculty.map((member) => (
+                              <option key={member.id} value={member.id}>
+                                {member.name}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
+
+              {selectedCourse.results && (
+                <div className="mt-10 rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-900 mb-6">Academic Excellence (Results)</h3>
+                  
+                  <div className="grid gap-6 md:grid-cols-2 mb-6">
+                    <div>
+                      <label className="block text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-2">
+                        Reporting Year
+                      </label>
+                      <input
+                        value={selectedCourse.results.year}
+                        onChange={(e) => updateResults(selectedCourse.courseSlug, r => ({ ...r, year: e.target.value }))}
+                        placeholder="e.g. 2024-25"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-amber-400 focus:bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-2">
+                        Overall Percentage
+                      </label>
+                      <input
+                        value={selectedCourse.results.percentage}
+                        onChange={(e) => updateResults(selectedCourse.courseSlug, r => ({ ...r, percentage: e.target.value }))}
+                        placeholder="e.g. 96%"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-amber-400 focus:bg-white"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-2">
+                        Highlight Description
+                      </label>
+                      <textarea
+                        value={selectedCourse.results.highlight}
+                        onChange={(e) => updateResults(selectedCourse.courseSlug, r => ({ ...r, highlight: e.target.value }))}
+                        rows={2}
+                        placeholder="e.g. Excellent academic performance..."
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-amber-400 focus:bg-white resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-3 block">
+                      Results Statistics
+                    </label>
+                    <div className="space-y-3">
+                      {selectedCourse.results.stats.map((stat, idx) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <input
+                            value={stat.label}
+                            onChange={(e) => updateResults(selectedCourse.courseSlug, r => {
+                              const newStats = [...r.stats];
+                              newStats[idx] = { ...newStats[idx], label: e.target.value };
+                              return { ...r, stats: newStats };
+                            })}
+                            placeholder="Stat Label (e.g. Distinctions)"
+                            className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none focus:border-amber-400 focus:bg-white"
+                          />
+                          <input
+                            value={stat.value}
+                            onChange={(e) => updateResults(selectedCourse.courseSlug, r => {
+                              const newStats = [...r.stats];
+                              newStats[idx] = { ...newStats[idx], value: e.target.value };
+                              return { ...r, stats: newStats };
+                            })}
+                            placeholder="Stat Value (e.g. 25+)"
+                            className="w-32 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none focus:border-amber-400 focus:bg-white"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => updateResults(selectedCourse.courseSlug, r => ({
+                              ...r,
+                              stats: r.stats.filter((_: any, i: number) => i !== idx)
+                            }))}
+                            className="text-xs font-bold text-rose-500 hover:text-rose-600 uppercase tracking-wider p-3"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                      
+                      <button
+                        type="button"
+                        onClick={() => updateResults(selectedCourse.courseSlug, r => ({
+                          ...r,
+                          stats: [...r.stats, { label: "", value: "" }]
+                        }))}
+                        className="text-xs mt-2 font-bold text-amber-600 hover:text-amber-700 uppercase tracking-wider"
+                      >
+                        + Add Statistic
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-slate-950/40 px-6 py-8 text-sm text-slate-500">
-              No courses are available for chapter tracking yet.
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-8 text-sm text-slate-500 text-center shadow-sm">
+              No courses are selected or available for faculty tracking yet.
             </div>
           )}
         </div>

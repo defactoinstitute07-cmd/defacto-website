@@ -48,7 +48,6 @@ export async function POST(request: NextRequest) {
     const signatureBase = [
       ["allowed_formats", allowedFormats],
       ["folder", folder],
-      ["max_file_size", String(CLOUDINARY_MAX_IMAGE_BYTES)],
       ["timestamp", String(timestamp)],
     ]
       .sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))

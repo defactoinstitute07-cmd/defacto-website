@@ -9,7 +9,7 @@ export interface Course {
   lightBg: string;
   iconColor: string;
   headerImageUrl: string;
-  teachers: { name: string; designation: string; imageUrl: string }[];
+  teachers?: { name: string; designation: string; imageUrl: string }[];
   results: { year: string; highlight: string; percentage: string; stats: { label: string; value: string }[] };
 }
 
@@ -27,20 +27,6 @@ export const COURSES_DATA: Course[] = [
     iconColor: "text-cyan-600",
     headerImageUrl:
       "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Foundation Program Mentor",
-        imageUrl:
-          "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      },
-      {
-        name: "Mrs. Meera Joshi",
-        designation: "Primary & Middle School Specialist",
-        imageUrl:
-          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
-      },
-    ],
     results: {
       year: "2024-25",
       highlight:
@@ -64,18 +50,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-blue-50",
     iconColor: "text-blue-600",
     headerImageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Senior Mathematics & Science Faculty",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      },
-      {
-        name: "Mrs. Meera Joshi",
-        designation: "Expert Science Specialist",
-        imageUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Excellent academic performance with consistent top scores.",
@@ -98,13 +72,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-indigo-50",
     iconColor: "text-indigo-600",
     headerImageUrl: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Senior Mathematics & Science Faculty",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Rigorous ICSE standards met with exceptional clarity.",
@@ -127,18 +94,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-emerald-50",
     iconColor: "text-emerald-600",
     headerImageUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Head of Institute & Senior Faculty",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      },
-      {
-        name: "Dr. Anuj Sharma",
-        designation: "Biology & Chemistry Expert",
-        imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200&h=200",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Outstanding board results with multiple school toppers.",
@@ -161,13 +116,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-orange-50",
     iconColor: "text-orange-600",
     headerImageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Senior Science Expert",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Exceptional mastery of ICSE board requirements.",
@@ -190,13 +138,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-rose-50",
     iconColor: "text-rose-600",
     headerImageUrl: "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Mathematics Specialist",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Solid conceptual base for upcoming board and entrance exams.",
@@ -219,13 +160,6 @@ export const COURSES_DATA: Course[] = [
     lightBg: "bg-violet-50",
     iconColor: "text-violet-600",
     headerImageUrl: "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=1600",
-    teachers: [
-      {
-        name: "Mr. Gopal Negi",
-        designation: "Advanced Physics & Math",
-        imageUrl: "https://res.cloudinary.com/dmswb6fya/image/upload/v1775581707/de-facto/kkoyiko8qr6ppzesg7gf.jpg",
-      }
-    ],
     results: {
       year: "2024-25",
       highlight: "Stellar performance in boards and entrance exams like JEE/NEET.",

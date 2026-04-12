@@ -24,7 +24,7 @@ function mapFaculty(docs: any[]) {
 export async function GET() {
   try {
     await connectDB();
-    const docs = await Faculty.find().sort({ created_at: -1 }).lean();
+      const docs = await Faculty.find().sort({ created_at: 1 }).lean();
     return NextResponse.json({ faculty: mapFaculty(docs) });
   } catch (error) {
     return handleRouteError(error, "Failed to load faculty.");
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     await Faculty.create({ name, designation, image_url: imageUrl });
 
-    const all = await Faculty.find().sort({ created_at: -1 }).lean();
+    const all = await Faculty.find().sort({ created_at: 1 }).lean();
     return NextResponse.json({ faculty: mapFaculty(all) }, { status: 201 });
   } catch (error) {
     return handleRouteError(error, "Failed to create faculty profile.");
@@ -69,7 +69,7 @@ export async function DELETE(request: NextRequest) {
       throw new NotFoundError("Faculty profile not found.");
     }
 
-    const all = await Faculty.find().sort({ created_at: -1 }).lean();
+    const all = await Faculty.find().sort({ created_at: 1 }).lean();
     return NextResponse.json({ faculty: mapFaculty(all) });
   } catch (error) {
     return handleRouteError(error, "Failed to delete faculty profile.");

@@ -101,7 +101,6 @@ export default function GalleryAdmin() {
       formData.append("signature", signature.signature);
       formData.append("folder", signature.folder);
       formData.append("allowed_formats", (signature.allowedFormats || []).join(","));
-      formData.append("max_file_size", String(signature.maxFileSize || CLOUDINARY_MAX_IMAGE_BYTES));
 
       const uploadRes = await fetch(
         `https://api.cloudinary.com/v1_1/${signature.cloudName}/image/upload`,
@@ -144,10 +143,10 @@ export default function GalleryAdmin() {
   }
 
   return (
-    <section className="max-w-4xl mx-auto py-8">
-      <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 rounded-[2rem] p-8 mb-12 shadow-2xl transition-all hover:bg-slate-900/60">
-        <div className="flex items-center gap-4 mb-10">
-          <div className="p-3 bg-amber-400/10 text-amber-500 rounded-2xl">
+    <section className="max-w-4xl mx-auto py-8 px-4 sm:px-6 text-slate-900">
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-[2rem] p-6 sm:p-8 mb-12 shadow-xl transition-all hover:bg-white">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-10">
+          <div className="p-3 bg-amber-100 text-amber-600 rounded-2xl w-fit">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
@@ -158,7 +157,7 @@ export default function GalleryAdmin() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Media Gallery</h2>
+            <h2 className="text-2xl font-bold text-slate-900">Media Gallery</h2>
             <p className="text-slate-500 text-sm">
               Add new photos to the &quot;Life at Defacto&quot; section.
             </p>
@@ -172,7 +171,7 @@ export default function GalleryAdmin() {
                 Photo Caption
               </label>
               <input
-                className="w-full bg-slate-800/40 border border-white/5 rounded-2xl px-5 py-3.5 text-white text-sm outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all font-medium"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all font-medium placeholder-slate-400"
                 placeholder="e.g., Results Day Celebration"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
@@ -183,7 +182,7 @@ export default function GalleryAdmin() {
                 Category
               </label>
               <select
-                className="w-full bg-slate-800 text-slate-200 border border-white/5 rounded-2xl px-5 py-[15px] text-sm outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all appearance-none font-medium"
+                className="w-full bg-slate-50 text-slate-900 border border-slate-200 rounded-2xl px-5 py-[15px] text-sm outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all appearance-none font-medium"
                 value={tag}
                 onChange={(e) => setTag(e.target.value)}
               >
@@ -203,16 +202,16 @@ export default function GalleryAdmin() {
               Gallery media is now locked to signed Cloudinary uploads only.
             </p>
             <div className="mt-4">
-              <label className="cursor-pointer group relative overflow-hidden bg-slate-800/40 border border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center hover:border-amber-500/50 transition-all duration-300">
+              <label className="cursor-pointer group relative overflow-hidden bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center hover:border-amber-400 transition-all duration-300">
                 <svg
-                  className="w-8 h-8 text-slate-600 group-hover:text-amber-500 transition-colors mb-3"
+                  className="w-8 h-8 text-slate-400 group-hover:text-amber-500 transition-colors mb-3"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="text-sm font-bold text-slate-400 group-hover:text-slate-200">
+                <span className="text-sm font-bold text-slate-500 group-hover:text-slate-900">
                   {isUploading ? "Uploading..." : "Click to select photo"}
                 </span>
                 <input
@@ -227,35 +226,35 @@ export default function GalleryAdmin() {
           </div>
 
           {imageUrl && (
-            <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-500/50 animate-in zoom-in duration-300 shadow-2xl">
+            <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-400 animate-in zoom-in duration-300 shadow-lg">
               <img src={imageUrl} className="h-full w-full object-cover" alt="Gallery preview" />
             </div>
           )}
 
-          {status && <div className="text-sm font-bold text-amber-400 ml-1 drop-shadow-sm">{status}</div>}
+          {status && <div className="text-sm font-bold text-amber-600 ml-1 drop-shadow-sm">{status}</div>}
 
           <button
             type="submit"
             disabled={isSaving || isUploading || !imageUrl}
-            className="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-4 rounded-[1.5rem] transition-all shadow-2xl shadow-amber-400/10 disabled:opacity-30 disabled:grayscale"
+            className="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-black py-4 rounded-[1.5rem] transition-all shadow-xl shadow-amber-400/20 disabled:opacity-50 disabled:grayscale"
           >
             {isSaving ? "Publishing Photo..." : "Publish to Live Gallery"}
           </button>
         </form>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
         {items.map((item) => (
           <div
             key={item._id}
-            className="group relative aspect-square bg-slate-900 border border-white/5 rounded-3xl overflow-hidden shadow-2xl transition-all hover:border-amber-500/30"
+            className="group relative aspect-square bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all hover:border-amber-400/50"
           >
             <img
               src={item.image_url}
               alt={item.caption}
-              className="h-full w-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+              className="h-full w-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-5">
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-4 sm:p-5">
               <span className="text-[8px] font-black text-amber-400 uppercase tracking-widest mb-1.5 drop-shadow-md">
                 {item.tag || "trip"}
               </span>
@@ -263,7 +262,7 @@ export default function GalleryAdmin() {
                 {item.caption}
               </p>
               <button
-                className="w-full py-2.5 bg-rose-500/10 backdrop-blur-md text-rose-400 text-[10px] font-black rounded-xl hover:bg-rose-500 hover:text-white transition-all border border-rose-500/20"
+                className="w-full py-2 sm:py-2.5 bg-rose-500/20 backdrop-blur-md text-rose-100 text-[10px] font-black rounded-xl hover:bg-rose-500 hover:text-white transition-all border border-rose-500/30"
                 onClick={() => handleDelete(item._id)}
               >
                 DELETE PHOTO
@@ -272,8 +271,8 @@ export default function GalleryAdmin() {
           </div>
         ))}
         {items.length === 0 && (
-          <div className="col-span-full py-20 text-center bg-slate-900/30 border-2 border-dashed border-white/5 rounded-[2.5rem]">
-            <p className="text-slate-600 font-bold italic">
+          <div className="col-span-full py-20 text-center bg-slate-50 border-2 border-dashed border-slate-300 rounded-[2.5rem]">
+            <p className="text-slate-500 font-bold italic">
               The gallery explorer is empty. Upload some memories!
             </p>
           </div>

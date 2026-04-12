@@ -126,7 +126,7 @@ export default function AdminLoginPage() {
   const showTwoFactorInput = !isSignupMode && requiresTwoFactor;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-stone-50 flex flex-col items-center justify-center p-6">
+    <div className="relative min-h-screen overflow-hidden bg-stone-50 flex flex-col items-center justify-center p-6 font-sans">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] h-[45%] w-[45%] rounded-full bg-amber-200/50 blur-[120px]" />
         <div className="absolute bottom-[-10%] left-[-10%] h-[40%] w-[40%] rounded-full bg-orange-200/40 blur-[120px]" />

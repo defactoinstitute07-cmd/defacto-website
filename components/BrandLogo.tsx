@@ -14,9 +14,9 @@ const BrandLogo = ({ className = "", variant = "dark", showText = true }: BrandL
       <Image
         src={logoImageUrl}
         alt="Defacto Institute Logo"
-        width={2560}
-        height={596}
-        sizes="(max-width: 640px) 128px, 160px"
+        width={500}
+        height={116}
+        sizes="(max-width: 640px) 128px, 200px"
         className={`h-10 w-auto ${className}`}
         priority
       />

@@ -3,152 +3,177 @@
     "courses": [
       {
         "courseSlug": "class-4-to-8-all-subjects",
+        "assignedTeacherIds": [],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Science",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "English",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Social Studies",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Hindi",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-9-cbse",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-9-icse",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-10-cbse",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-10-icse",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-11-science",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       },
       {
         "courseSlug": "class-12-science",
+        "assignedTeacherIds": [
+          "69d65bcbc22ae43da770078e",
+          "69da77b40559e19d2d62d07a"
+        ],
         "subjects": [
           {
             "subjectName": "Mathematics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Physics",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Chemistry",
-            "chapters": []
+            "assignedTeacherId": null
           },
           {
             "subjectName": "Biology",
-            "chapters": []
+            "assignedTeacherId": null
           }
         ]
       }

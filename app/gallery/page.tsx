@@ -119,61 +119,61 @@ export default function GalleryPage() {
 
   return (
     <>
-{/* Hero Banner */}
-<section className="relative -mx-4 sm:-mx-6 lg:-mx-8 bg-slate-900 overflow-hidden">
-  {/* Ambient Glows - Mobile par scale down kiye hain taaki content chup na jaye */}
-  <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute top-[-10%] right-[-10%] w-[80%] h-[80%] md:w-[60%] md:h-[60%] bg-amber-500/10 blur-[80px] md:blur-[120px] rounded-full" />
-    <div className="absolute bottom-[-10%] left-[-10%] w-[70%] h-[70%] md:w-[50%] md:h-[50%] bg-orange-600/10 blur-[80px] md:blur-[120px] rounded-full" />
-  </div>
+      {/* Hero Banner */}
+      <section className="relative -mx-4 sm:-mx-6 lg:-mx-8 bg-slate-900 overflow-hidden">
+        {/* Ambient Glows - Mobile par scale down kiye hain taaki content chup na jaye */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[-10%] right-[-10%] w-[80%] h-[80%] md:w-[60%] md:h-[60%] bg-amber-500/10 blur-[80px] md:blur-[120px] rounded-full" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[70%] h-[70%] md:w-[50%] md:h-[50%] bg-orange-600/10 blur-[80px] md:blur-[120px] rounded-full" />
+        </div>
 
-  {/* Main Content Container - Padding adjust ki hai (py-16 mobile, py-28 desktop) */}
-  <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:py-28 lg:px-8">
-    
-    {/* Back to Home Link */}
-    <Link
-      href="/"
-      className="inline-flex items-center gap-2 text-slate-400 hover:text-white text-xs md:text-sm font-medium mb-6 md:mb-8 transition-colors group w-fit"
-    >
-      <svg
-        className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2.5"
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-      Back to Home
-    </Link>
+        {/* Main Content Container - Padding adjust ki hai (py-16 mobile, py-28 desktop) */}
+        <div className="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-6 md:py-28 lg:px-8">
 
-    <div className="max-w-3xl">
-      {/* Eyebrow Badge */}
-      <span className="inline-block px-3 py-1.5 md:px-4 md:py-1.5 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-amber-400 bg-amber-400/10 rounded-full border border-amber-400/20 mb-4 md:mb-6">
-        Institute Gallery
-      </span>
-      
-      {/* Main Heading - Responsive text sizes */}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 md:mb-5 leading-[1.1]">
-        Capturing{" "}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 block sm:inline">
-          Moments
-        </span>
-      </h1>
-      
-      {/* Description */}
-      <p className="text-slate-400 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed md:leading-relaxed">
-        A visual journey through the life, events, and memories that make
-        Defacto Institute a place of learning and growth.
-      </p>
-    </div>
-    
-  </div>
-</section>
+          {/* Back to Home Link */}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-white text-xs md:text-sm font-medium mb-6 md:mb-8 transition-colors group w-fit"
+          >
+            <svg
+              className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Home
+          </Link>
+
+          <div className="max-w-3xl">
+            {/* Eyebrow Badge */}
+            <span className="inline-block px-3 py-1.5 md:px-4 md:py-1.5 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase text-amber-400 bg-amber-400/10 rounded-full border border-amber-400/20 mb-4 md:mb-6">
+              Institute Gallery
+            </span>
+
+            {/* Main Heading - Responsive text sizes */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 md:mb-5 leading-[1.1]">
+              Capturing{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 block sm:inline">
+                Moments
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-slate-400 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed md:leading-relaxed">
+              A visual journey through the life, events, and memories that make
+              Defacto Institute a place of learning and growth.
+            </p>
+          </div>
+
+        </div>
+      </section>
 
       {/* Filter Bar */}
       <section className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-100 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -186,22 +186,20 @@ export default function GalleryPage() {
                 <button
                   key={opt.value}
                   onClick={() => setActiveFilter(opt.value)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap shrink-0 ${
-                    isActive
-                      ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10"
-                      : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"
-                  }`}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap shrink-0 ${isActive
+                    ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10"
+                    : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800"
+                    }`}
                 >
                   <span className="flex h-5 w-5 items-center justify-center" aria-hidden="true">
                     <FilterIcon value={opt.value} />
                   </span>
                   {opt.label}
                   <span
-                    className={`text-[10px] font-black px-1.5 py-0.5 rounded-md ${
-                      isActive
-                        ? "bg-amber-400 text-slate-900"
-                        : "bg-slate-200 text-slate-400"
-                    }`}
+                    className={`text-[10px] font-black px-1.5 py-0.5 rounded-md ${isActive
+                      ? "bg-amber-400 text-slate-900"
+                      : "bg-slate-200 text-slate-400"
+                      }`}
                   >
                     {count}
                   </span>
@@ -347,32 +345,37 @@ export default function GalleryPage() {
               className="relative max-w-5xl max-h-[90vh] w-full"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close + Counter */}
-              <div className="absolute -top-12 left-0 right-0 flex items-center justify-between">
-                <span className="text-white/50 text-sm font-bold">
-                  {currentIndex + 1} / {filtered.length}
-                </span>
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="text-white/60 hover:text-white transition-colors"
-                >
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
               <img
                 src={getOptimizedImageUrl(selectedImage.image_url, { width: 1600 })}
                 srcSet={getCloudinarySrcSet(selectedImage.image_url, [720, 960, 1280, 1600, 2000])}
                 sizes="90vw"
                 alt={selectedImage.caption}
-                className="w-full max-h-[80vh] object-contain rounded-2xl"
+                className="w-full max-h-[80vh] z-50 object-contain rounded-2xl"
                 decoding="async"
               />
 
+              {/* Close + Counter - Ab image ke upar (top area) aur z-index ke sath */}
+              <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-[60] pointer-events-none">
+
+                {/* Counter */}
+                <span className="bg-black/50 px-3 py-1 rounded-full text-white text-sm font-bold shadow-sm backdrop-blur-sm">
+                  {currentIndex + 1} / {filtered.length}
+                </span>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="bg-black/50 p-2 rounded-full text-white/80 hover:text-white hover:bg-black/70 transition-all shadow-sm backdrop-blur-sm pointer-events-auto"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Caption Box */}
               {(selectedImage.caption || selectedImage.tag) && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-2xl">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-2xl z-[60]">
                   <span className="inline-block px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-black rounded-lg uppercase tracking-wider mb-2">
                     {selectedImage.tag || "trip"}
                   </span>

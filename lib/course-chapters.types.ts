@@ -1,21 +1,20 @@
-export const chapterStatusOptions = ["ongoing", "completed"] as const;
-
-export type ChapterStatus = (typeof chapterStatusOptions)[number];
-
-export type ChapterRecord = {
-  id: string;
-  title: string;
-  status: ChapterStatus;
-};
-
 export type SubjectChapterRecord = {
   subjectName: string;
-  chapters: ChapterRecord[];
+  assignedTeacherId?: string | null;
+};
+
+export type CourseResultsRecord = {
+  year: string;
+  percentage: string;
+  highlight: string;
+  stats: { label: string; value: string }[];
 };
 
 export type CourseChapterRecord = {
   courseSlug: string;
+  assignedTeacherIds?: string[];
   subjects: SubjectChapterRecord[];
+  results?: CourseResultsRecord;
 };
 
 export type CourseChapterCatalog = {

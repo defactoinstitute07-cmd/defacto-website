@@ -20,6 +20,7 @@ const CourseChaptersAdmin = dynamic(() => import("../../components/CourseChapter
 const AdminSecurityPanel = dynamic(() => import("../../components/AdminSecurityPanel"), {
   ssr: false,
 });
+const ToppersAdmin = dynamic(() => import("../../components/ToppersAdmin"), { ssr: false });
 
 type EditableContent = SiteContent;
 
@@ -253,6 +254,20 @@ export default function AdminPage() {
         </svg>
       ),
     },
+    {
+      id: "toppers",
+      label: "Toppers",
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z"
+          />
+        </svg>
+      ),
+    },
   ];
 
   if (isLoading) {
@@ -265,26 +280,26 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 sm:p-10 font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 p-4 sm:p-10 font-sans">
       <div className="mx-auto w-full max-w-5xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div className="flex items-center gap-4">
-            <BrandLogo variant="light" />
-            <div className="h-8 w-[1px] bg-white/10 hidden md:block" />
-            <h1 className="text-xl font-bold tracking-tight text-white hidden md:block">
+            <BrandLogo variant="dark" />
+            <div className="h-8 w-[1px] bg-slate-300 hidden md:block" />
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 hidden md:block">
               Admin Console
             </h1>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.replace("/")}
-              className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 text-sm font-bold hover:bg-white/10 transition-colors"
+              className="px-5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm"
             >
               View Site
             </button>
             <button
               onClick={handleLogout}
-              className="px-5 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm font-bold hover:bg-rose-500/20 transition-colors"
+              className="px-5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm font-bold hover:bg-rose-100 transition-colors shadow-sm"
             >
               Logout
             </button>
@@ -296,10 +311,10 @@ export default function AdminPage() {
         <main className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {activeTab === "content" && (
             <div className="space-y-8 max-w-3xl mx-auto">
-              <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl">
+              <div className="bg-white/80 backdrop-blur-xl border border-slate-200 p-6 sm:p-8 rounded-[2rem] shadow-xl transition-all hover:bg-white">
                 <div className="mb-8">
-                  <h2 className="text-2xl font-bold text-white mb-2">Website Visuals</h2>
-                  <p className="text-slate-400 text-sm">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-2">Website Visuals</h2>
+                  <p className="text-slate-500 text-sm">
                     Update the primary images displayed on your homepage.
                   </p>
                 </div>
@@ -309,19 +324,19 @@ export default function AdminPage() {
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">
                       Hero Background
                     </label>
-                    <div className="relative group rounded-3xl overflow-hidden border border-white/5 bg-slate-800/50 transition-all hover:border-white/10">
+                    <div className="relative group rounded-3xl overflow-hidden border border-slate-200 bg-slate-50 transition-all hover:border-slate-300 hover:shadow-md">
                       {content.heroImageUrl ? (
                         <img
                           src={content.heroImageUrl}
-                          className="h-48 w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                          className="h-48 w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                           alt="Hero preview"
                         />
                       ) : (
-                        <div className="h-48 w-full flex items-center justify-center text-slate-600 italic text-sm">
+                        <div className="h-48 w-full flex items-center justify-center text-slate-400 italic text-sm">
                           No image uploaded
                         </div>
                       )}
-                      <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                      <label className="absolute inset-0 flex items-center justify-center bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                         <span className="bg-white text-slate-900 px-6 py-2 rounded-xl font-bold text-sm shadow-xl">
                           Change Photo
                         </span>
@@ -337,24 +352,24 @@ export default function AdminPage() {
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">
                         About Section
                       </label>
-                      <div className="relative group aspect-square rounded-3xl overflow-hidden border border-white/5 bg-slate-800/50 transition-all hover:border-white/10">
+                      <div className="relative group aspect-square rounded-3xl overflow-hidden border border-slate-200 bg-slate-50 transition-all hover:border-slate-300 hover:shadow-md">
                         {content.aboutImageUrl ? (
                           <img
                             src={content.aboutImageUrl}
-                            className="h-full w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                            className="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                             alt="About preview"
                           />
                         ) : (
-                          <div className="h-full w-full flex items-center justify-center text-slate-600 italic text-sm">
+                          <div className="h-full w-full flex items-center justify-center text-slate-400 italic text-sm">
                             No image
                           </div>
                         )}
-                        <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <label className="absolute inset-0 flex items-center justify-center bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                           <span className="bg-white text-slate-900 px-4 py-2 rounded-xl font-bold text-xs shadow-xl">
                             Change
                           </span>
@@ -369,23 +384,24 @@ export default function AdminPage() {
                         </label>
                       </div>
                     </div>
+
                     <div className="space-y-4">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">
                         Owner / Teacher
                       </label>
-                      <div className="relative group aspect-square rounded-3xl overflow-hidden border border-white/5 bg-slate-800/50 transition-all hover:border-white/10">
+                      <div className="relative group aspect-square rounded-3xl overflow-hidden border border-slate-200 bg-slate-50 transition-all hover:border-slate-300 hover:shadow-md">
                         {content.ownerImageUrl ? (
                           <img
                             src={content.ownerImageUrl}
-                            className="h-full w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                            className="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                             alt="Owner preview"
                           />
                         ) : (
-                          <div className="h-full w-full flex items-center justify-center text-slate-600 italic text-sm">
+                          <div className="h-full w-full flex items-center justify-center text-slate-400 italic text-sm">
                             No image
                           </div>
                         )}
-                        <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <label className="absolute inset-0 flex items-center justify-center bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                           <span className="bg-white text-slate-900 px-4 py-2 rounded-xl font-bold text-xs shadow-xl">
                             Change
                           </span>
@@ -403,7 +419,7 @@ export default function AdminPage() {
                   </div>
 
                   {status && (
-                    <div className="p-4 bg-amber-400/10 border border-amber-400/20 rounded-2xl text-amber-200 text-xs font-bold shadow-sm">
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-800 text-xs font-bold shadow-sm">
                       {status}
                     </div>
                   )}
@@ -411,7 +427,7 @@ export default function AdminPage() {
                   <button
                     type="submit"
                     disabled={isSaving || isUploadingHero || isUploadingAbout || isUploadingOwner}
-                    className="w-full bg-amber-400 hover:bg-amber-300 disabled:opacity-30 disabled:grayscale text-slate-950 font-extrabold py-4 rounded-[1.5rem] transition-all shadow-xl shadow-amber-400/10"
+                    className="w-full bg-amber-400 hover:bg-amber-500 disabled:opacity-50 disabled:grayscale text-slate-900 font-extrabold py-4 rounded-[1.5rem] transition-all shadow-xl shadow-amber-400/20"
                   >
                     {isSaving ? "Saving Application..." : "Save Website Visuals"}
                   </button>
@@ -424,6 +440,7 @@ export default function AdminPage() {
           {activeTab === "gallery" && <GalleryAdmin />}
           {activeTab === "courses" && <CourseChaptersAdmin />}
           {activeTab === "security" && <AdminSecurityPanel />}
+          {activeTab === "toppers" && <ToppersAdmin />}
         </main>
       </div>
     </div>

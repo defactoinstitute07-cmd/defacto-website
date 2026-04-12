@@ -2,15 +2,8 @@ import {
   createDefaultCourseChapterCatalog,
   normalizeCourseChapterCatalog,
 } from "./course-chapters-schema";
-import {
-  getLocalCourseChapterCatalog,
-  saveLocalCourseChapterCatalog,
-} from "./local-course-chapters-store";
-import {
-  createSupabasePublicClient,
-  createSupabaseServiceClient,
-  isSupabaseConfigured,
-} from "./supabase/server";
+import connectDB from "./mongodb";
+import SiteContent from "../models/SiteContent";
 import type { CourseChapterCatalog } from "./course-chapters.types";
 
 const COURSE_CHAPTER_STORAGE_KEY = "courseChapterCatalog";
@@ -20,60 +13,41 @@ type SiteContentRow = {
 };
 
 export async function getPublicCourseChapterCatalog(): Promise<CourseChapterCatalog> {
-  if (!isSupabaseConfigured()) {
-    return getLocalCourseChapterCatalog();
-  }
-
   try {
-    const supabase = createSupabasePublicClient();
-    const { data, error } = await supabase
-      .from("site_content")
-      .select("value")
-      .eq("key", COURSE_CHAPTER_STORAGE_KEY)
-      .maybeSingle();
+    await connectDB();
+    const doc = await SiteContent.findOne({ key: COURSE_CHAPTER_STORAGE_KEY }).lean();
 
-    if (error || !data || typeof (data as SiteContentRow).value !== "string") {
-      return getLocalCourseChapterCatalog();
+    if (!doc || typeof doc.value !== "string") {
+      return createDefaultCourseChapterCatalog();
     }
 
-    return normalizeCourseChapterCatalog(JSON.parse((data as SiteContentRow).value || "{}"));
+    return normalizeCourseChapterCatalog(JSON.parse(doc.value || "{}"));
   } catch {
-    return getLocalCourseChapterCatalog();
+    return createDefaultCourseChapterCatalog();
   }
 }
 
 export async function saveCourseChapterCatalog(
   catalog: CourseChapterCatalog,
   userId: string,
-): Promise<{ catalog: CourseChapterCatalog; storage: "local" | "supabase" }> {
+): Promise<{ catalog: CourseChapterCatalog; storage: "mongodb" }> {
   const normalized = normalizeCourseChapterCatalog(catalog);
 
-  if (!isSupabaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    const localCatalog = await saveLocalCourseChapterCatalog(normalized);
-    return { catalog: localCatalog, storage: "local" };
+  try {
+    await connectDB();
+    await SiteContent.findOneAndUpdate(
+      { key: COURSE_CHAPTER_STORAGE_KEY },
+      {
+        value: JSON.stringify(normalized),
+        updated_by: userId,
+      },
+      { upsert: true, new: true },
+    );
+
+    return { catalog: normalized, storage: "mongodb" };
+  } catch (error) {
+    throw new Error(`Failed to update faculty assignments: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
-
-  const supabase = createSupabaseServiceClient();
-  const { error } = await supabase.from("site_content").upsert(
-    {
-      key: COURSE_CHAPTER_STORAGE_KEY,
-      value: JSON.stringify(normalized),
-      updated_by: userId,
-    },
-    { onConflict: "key" },
-  );
-
-  if (error) {
-    const lowerMessage = error.message.toLowerCase();
-    if (lowerMessage.includes("site_content") || error.code === "42P01") {
-      const localCatalog = await saveLocalCourseChapterCatalog(normalized);
-      return { catalog: localCatalog, storage: "local" };
-    }
-
-    throw new Error(`Failed to update chapter tracker: ${error.message}`);
-  }
-
-  return { catalog: normalized, storage: "supabase" };
 }
 
 export function getDefaultCourseChapterCatalog() {

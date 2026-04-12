@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  return children;
+  return <div className="font-sans">{children}</div>;
 }

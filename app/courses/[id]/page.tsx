@@ -2,11 +2,12 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import CourseChapterTracker from "../../../components/CourseChapterTracker";
 import { getPublicCourseChapterCatalog } from "../../../lib/course-chapters";
 import { COURSES_DATA } from "../../../lib/course-data";
 import { getCloudinarySrcSet, getOptimizedImageUrl } from "../../../lib/image-utils";
+import connectDB from "../../../lib/mongodb";
 import { buildMetadata } from "../../../lib/seo";
+import Faculty from "../../../models/Faculty";
 
 export function generateStaticParams() {
   return COURSES_DATA.map((course) => ({
@@ -52,9 +53,40 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
       courseSlug: course.slug,
       subjects: course.subjects.map((subjectName) => ({
         subjectName,
+        assignedTeacherId: null,
         chapters: [],
       })),
     };
+
+  // Fetch all assigned faculty members for this batch
+  await connectDB();
+  const batchTeacherIds = courseChapterRecord.assignedTeacherIds || [];
+
+  let displayTeachers: any[] = [];
+
+  if (batchTeacherIds.length > 0) {
+    const facultyDocs = await Faculty.find({ _id: { $in: batchTeacherIds } }).lean();
+    if (facultyDocs.length > 0) {
+      displayTeachers = facultyDocs.map((doc) => ({
+        name: doc.name,
+        designation: doc.designation,
+        imageUrl: doc.image_url,
+      }));
+    }
+  }
+
+  // Create a map for subject-specific teacher display
+  const subjectTeacherMap = new Map<string, { name: string }>();
+  const subjectTeacherIds = courseChapterRecord.subjects
+    .map((s) => s.assignedTeacherId)
+    .filter(Boolean) as string[];
+
+  if (subjectTeacherIds.length > 0) {
+    const facultyDocs = await Faculty.find({ _id: { $in: subjectTeacherIds } }).lean();
+    facultyDocs.forEach(doc => {
+      subjectTeacherMap.set(String(doc._id), { name: doc.name });
+    });
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -95,13 +127,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             <div className="flex flex-wrap gap-4">
               <Link
                 href={`/contact?batch=${encodeURIComponent(`${course.title} (${course.variant})`)}`}
-                className="px-8 py-4 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-100 transition-all hover:-translate-y-1 shadow-2xl"
+                className="px-8 py-4 mt-4 bg-white text-slate-900 font-bold rounded-2xl hover:bg-slate-100 transition-all hover:-translate-y-1 shadow-2xl"
               >
                 Enroll in this Batch
               </Link>
-              <button className="px-8 py-4 bg-transparent border-2 border-white/30 text-white font-bold rounded-2xl hover:bg-white/10 transition-all">
-                Download Curriculum
-              </button>
+
             </div>
           </div>
         </div>
@@ -119,23 +149,28 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 Specialized Core Subjects
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {course.subjects.map((subject) => (
-                  <div key={subject} className="flex items-center p-6 bg-white rounded-[0px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div className={`p-4 rounded-2xl ${course.lightBg} ${course.iconColor} mr-5`}>
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
+                {courseChapterRecord.subjects.map((subject) => {
+                  const teacherId = subject.assignedTeacherId;
+                  const teacher = teacherId ? subjectTeacherMap.get(String(teacherId)) : null;
+
+                  return (
+                    <div key={subject.subjectName} className="flex items-center p-6 bg-white rounded-[0px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                      <div className={`p-4 rounded-2xl ${course.lightBg} ${course.iconColor} mr-5`}>
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-slate-900">{subject.subjectName}</h3>
+                        <p className="text-sm text-slate-500">
+                          {teacher ? `Mentored by ${teacher.name}` : "Expert conceptual learning"}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-900">{subject}</h3>
-                      <p className="text-sm text-slate-500">In-depth conceptual learning</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
-
-            <CourseChapterTracker subjects={courseChapterRecord.subjects} />
 
             {/* Teaching Faculty */}
             <div>
@@ -143,33 +178,43 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 <span className="w-2 h-8 bg-blue-500 rounded-full" />
                 Expert Faculty
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {course.teachers.map((teacher) => (
-                  <div key={teacher.name} className="group flex items-center gap-6 p-6 bg-white rounded-[0px] border border-slate-100 shadow-sm transition-all hover:border-blue-100 hover:shadow-xl">
-                    <div className="relative">
-                      <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-50 group-hover:border-blue-50 transition-colors">
-                        <img
-                          src={getOptimizedImageUrl(teacher.imageUrl, { width: 320 })}
-                          srcSet={getCloudinarySrcSet(teacher.imageUrl, [160, 240, 320, 480])}
-                          sizes="96px"
-                          alt={teacher.name}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                        />
+              {displayTeachers.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  {displayTeachers.map((teacher) => (
+                    <div
+                      key={teacher.name}
+                      className="group flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-6 p-6 bg-white rounded-[2rem] border border-slate-200 shadow-sm transition-all duration-300 hover:border-amber-300 hover:shadow-xl"
+                    >
+                      <div className="relative shrink-0">
+                        <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-slate-50 group-hover:ring-amber-100 transition-all duration-300">
+                          <img
+                            src={getOptimizedImageUrl(teacher.imageUrl, { width: 320 })}
+                            srcSet={getCloudinarySrcSet(teacher.imageUrl, [160, 240, 320, 480])}
+                            sizes="96px"
+                            alt={teacher.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
+
                       </div>
-                      <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-1.5 rounded-full border-2 border-white">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" /></svg>
+
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-slate-900 mb-0.5">{teacher.name}</h3>
+                        <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-1.5">
+                          {teacher.designation}
+                        </p>
+                        <p className="text-xs text-slate-500 font-medium">Expert Mentor</p>
                       </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-900">{teacher.name}</h3>
-                      <p className="text-sm text-blue-600 font-medium mb-1">{teacher.designation}</p>
-                      <p className="text-xs text-slate-400">10+ Years Experience</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 bg-white border border-slate-200 rounded-2xl text-center text-slate-500 italic">
+                  No faculty assigned to this batch yet.
+                </div>
+              )}
             </div>
           </div>
 
@@ -179,14 +224,14 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -tr-16 -rt-16" />
               <div className="relative z-10">
                 <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block mb-4">Academic Excellence</span>
-                <h2 className="text-3xl font-bold mb-6">Last Year Results ({course.results.year})</h2>
+                <h2 className="text-3xl font-bold mb-6">Last Year Results ({courseChapterRecord.results?.year})</h2>
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="text-5xl font-extrabold text-amber-400">{course.results.percentage}</div>
+                  <div className="text-5xl font-extrabold text-amber-400">{courseChapterRecord.results?.percentage}</div>
                   <div className="text-sm text-slate-400 font-medium leading-tight">Average Board<br />Success Rate</div>
                 </div>
 
                 <div className="space-y-6 mb-10">
-                  {course.results.stats.map((stat) => (
+                  {courseChapterRecord.results?.stats?.map((stat) => (
                     <div key={stat.label} className="flex items-center justify-between border-b border-white/10 pb-4">
                       <span className="text-slate-400 font-medium">{stat.label}</span>
                       <span className="text-xl font-bold">{stat.value}</span>
@@ -195,7 +240,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 </div>
 
                 <div className="bg-white/5 rounded-2xl p-6 border border-white/10 italic text-slate-300 text-sm leading-relaxed mb-8">
-                  "{course.results.highlight}"
+                  "{courseChapterRecord.results?.highlight}"
                 </div>
 
                 <Link

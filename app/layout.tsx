@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import FloatingActions from "../components/FloatingActions";
 import { getOrganizationSchema, getWebsiteSchema, siteConfig } from "../lib/seo";
 
 const globalStructuredData = [getOrganizationSchema(), getWebsiteSchema()];
@@ -19,12 +20,33 @@ export const metadata: Metadata = {
   keywords: [
     "Defacto Institute",
     "coaching institute in Bhaniawala",
-    "Dehradun coaching classes",
+    "best coaching institute in bhaniyawala",
+    "best coaching classes in bhaniyawala",
+    "best foundation classes in bhaniyawala",
+    "best classes for 8th to 10th in bhaniyawala",
+    "best classes for 10th to 12th in bhaniyawala",
+    "best classes for 11th to 12th in bhaniyawala",
+    "best classes for 9th to 10th in bhaniyawala",
+    "best classes for 10th CBSE in bhaniyawala",
+    "best classes for 10th ICSE in bhaniyawala",
+    "best classes for 10th State Board in bhaniyawala",
+    "best classes for 11th CBSE in bhaniyawala",
+    "best classes for 11th ICSE in bhaniyawala",
+    "best classes for 11th State Board in bhaniyawala",
+    "best classes for 12th CBSE in bhaniyawala",
+    "best classes for 12th ICSE in bhaniyawala",
+    "best classes for 12th State Board in bhaniyawala",
+    "best board exam preparation in bhaniyawala",
+    "best competitive exam coaching in bhaniyawala",
+    "bhaniyawala coaching classes",
     "board exam preparation",
     "foundation classes",
-    "JEE coaching",
-    "NEET coaching",
   ],
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
   alternates: {
     canonical: siteConfig.url,
   },
@@ -70,7 +92,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="w-full overflow-x-hidden">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        />
+      </head>
+
       <body className="min-h-screen w-full bg-stone-50 text-slate-900 antialiased overflow-x-hidden">
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -84,6 +114,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
+        <FloatingActions />
         <Analytics />
       </body>
     </html>

@@ -9,7 +9,7 @@ export const CLOUDINARY_MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 export function getAllowedCloudinaryFolders(defaultFolder?: string) {
   return new Set(
-    [defaultFolder, "de-facto", "faculty", "student_trips"].filter(
+    [defaultFolder, "de-facto", "faculty", "student_trips", "toppers"].filter(
       (value): value is string => Boolean(value),
     ),
   );
