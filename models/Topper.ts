@@ -2,9 +2,8 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface ITopper extends Document {
   name: string;
-  classExam: string;
-  achievement: string;
-  year: string;
+  board: string;
+  studentClass: string;
   imageUrl: string;
   created_at: Date;
   updated_at: Date;
@@ -17,17 +16,12 @@ const TopperSchema = new Schema<ITopper>(
       required: true,
       trim: true,
     },
-    classExam: {
+    board: {
       type: String,
       required: true,
       trim: true,
     },
-    achievement: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    year: {
+    studentClass: {
       type: String,
       required: true,
       trim: true,
@@ -47,7 +41,7 @@ const TopperSchema = new Schema<ITopper>(
   }
 );
 
-TopperSchema.index({ year: -1, created_at: -1 });
+TopperSchema.index({ created_at: -1 });
 
 const Topper: Model<ITopper> =
   mongoose.models.Topper || mongoose.model<ITopper>("Topper", TopperSchema);

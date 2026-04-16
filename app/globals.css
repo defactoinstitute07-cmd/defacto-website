@@ -76,6 +76,11 @@ p {
   }
 }
 
+@keyframes slideMarquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
 .institute-art-bg {
   position: absolute;
   inset: 0;

@@ -10,9 +10,8 @@ import {
 type Topper = {
   _id: string;
   name: string;
-  classExam: string;
-  achievement: string;
-  year: string;
+  board: string;
+  studentClass: string;
   imageUrl: string;
   created_at: string;
 };
@@ -20,9 +19,8 @@ type Topper = {
 export default function ToppersAdmin() {
   const [items, setItems] = useState<Topper[]>([]);
   const [name, setName] = useState("");
-  const [classExam, setClassExam] = useState("");
-  const [achievement, setAchievement] = useState("");
-  const [year, setYear] = useState(new Date().getFullYear().toString());
+  const [board, setBoard] = useState("CBSE");
+  const [studentClass, setStudentClass] = useState("Class 12");
   const [imageUrl, setImageUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState("");
@@ -49,6 +47,11 @@ export default function ToppersAdmin() {
       setStatus("Please upload a topper photo first.");
       return;
     }
+    
+    if (!name.trim()) {
+      setStatus("Please enter the student's name.");
+      return;
+    }
 
     setIsSaving(true);
     setStatus("");
@@ -57,7 +60,7 @@ export default function ToppersAdmin() {
       const res = await fetch("/api/toppers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, classExam, achievement, year, imageUrl }),
+        body: JSON.stringify({ name, board, studentClass, imageUrl }),
       });
 
       const data = await res.json();
@@ -65,10 +68,10 @@ export default function ToppersAdmin() {
       if (res.ok) {
         setItems([data.topper, ...items]);
         setName("");
-        setClassExam("");
-        setAchievement("");
+        setBoard("CBSE");
+        setStudentClass("Class 12");
         setImageUrl("");
-        setStatus("Topper achievement added successfully.");
+        setStatus("Topper added successfully.");
       } else {
         setStatus(data.error || "Failed to add topper.");
       }
@@ -166,7 +169,7 @@ export default function ToppersAdmin() {
         </div>
 
         <form onSubmit={handleAdd} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Student Name</label>
               <input
@@ -178,34 +181,34 @@ export default function ToppersAdmin() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Class / Exam</label>
-              <input
-                required
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 outline-none transition-all"
-                placeholder="e.g. CBSE Class 12th"
-                value={classExam}
-                onChange={(e) => setClassExam(e.target.value)}
-              />
+              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Board</label>
+              <select
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 outline-none transition-all text-slate-700"
+                value={board}
+                onChange={(e) => setBoard(e.target.value)}
+              >
+                <option value="CBSE">CBSE</option>
+                <option value="ICSE">ICSE</option>
+                <option value="UP Board">UP Board</option>
+                <option value="Bihar Board">Bihar Board</option>
+                <option value="State Board">State Board</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Achievement</label>
-              <input
-                required
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 outline-none transition-all"
-                placeholder="e.g. 98.6% Marks"
-                value={achievement}
-                onChange={(e) => setAchievement(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Session Year</label>
-              <input
-                required
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 outline-none transition-all"
-                placeholder="e.g. 2024-25"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-              />
+              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Class</label>
+              <select
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 outline-none transition-all text-slate-700"
+                value={studentClass}
+                onChange={(e) => setStudentClass(e.target.value)}
+              >
+                <option value="Class 10">Class 10</option>
+                <option value="Class 11">Class 11</option>
+                <option value="Class 12">Class 12</option>
+                <option value="Dropper">Dropper</option>
+                <option value="Foundation">Foundation</option>
+                <option value="Alumni">Alumni</option>
+              </select>
             </div>
           </div>
 
@@ -220,7 +223,7 @@ export default function ToppersAdmin() {
                 <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} />
               </label>
               {imageUrl && (
-                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-blue-400 shadow-md">
+                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-blue-400 shadow-md flex-shrink-0">
                   <img src={imageUrl} alt="Preview" className="h-full w-full object-cover" />
                 </div>
               )}
@@ -232,38 +235,33 @@ export default function ToppersAdmin() {
             disabled={isSaving || isUploading || !imageUrl}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all disabled:opacity-50"
           >
-            {isSaving ? "Saving..." : "Add to Hall of Fame"}
+            {isSaving ? "Saving..." : "Add Photo to Hall of Fame"}
           </button>
           
           {status && <p className="text-center text-xs font-bold text-blue-600">{status}</p>}
         </form>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {items.map((item) => (
-          <div key={item._id} className="bg-white border border-slate-200 rounded-3xl p-4 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 italic">
+          <div key={item._id} className="relative group bg-white border border-slate-200 rounded-3xl p-2 flex flex-col shadow-sm hover:shadow-md transition-shadow">
+            <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 relative">
               <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />
-            </div>
-            <div className="px-1">
-              <h3 className="font-bold text-slate-900">{item.name}</h3>
-              <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">{item.classExam}</p>
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-sm font-black text-slate-900">{item.achievement}</p>
-                  <p className="text-[10px] text-slate-400 font-medium">Batch {item.year}</p>
-                </div>
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
-                  aria-label="Delete"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-12">
+                <p className="text-white font-bold text-sm truncate">{item.name}</p>
+                <p className="text-white/70 text-[10px] font-medium tracking-wide mt-0.5">{item.board} • {item.studentClass}</p>
               </div>
             </div>
+            {/* Delete button layered on top on hover */}
+            <button
+              onClick={() => handleDelete(item._id)}
+              className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl shadow-sm opacity-0 group-hover:opacity-100 transition-all"
+              aria-label="Delete"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
           </div>
         ))}
       </div>

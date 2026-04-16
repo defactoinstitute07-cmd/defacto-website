@@ -67,12 +67,31 @@ border-b border-white/10 backdrop-blur-md">
           <div className="relative z-10 mx-auto flex h-[72px] max-w-[1500px] items-center justify-between gap-3 px-5 sm:h-[78px] sm:px-6 lg:h-[84px] lg:px-8">
 
             {/* 🔥 Logo */}
-            <div className="flex flex-col">
+            <div className="flex items-center gap-3 font-sans">
               <Link
                 href="/"
-                className="inline-flex items-center transition hover:opacity-80"
+                className="flex items-center gap-3 hover:opacity-80 transition"
               >
-                <BrandLogo variant="dark" className="h-8 sm:h-9 lg:h-10 brightness-110" />
+                {/* Logo */}
+                <div className="h-10 rounded-xl bg-gradient-to-br from-[#0f172a] to-black border border-white/10 flex items-center justify-center shadow-lg">
+
+                  <img
+                    src="https://res.cloudinary.com/dsks5swu1/image/upload/v1775565407/erp_uploads/xcoemwx25dr8gcjkm4ha.png"   // 👈 apna image path
+                    alt="Defacto Logo"
+                    className="w-full h-full object-contain"
+                  />
+
+                </div>
+
+                {/* Text */}
+                <div className="flex flex-col leading-tight">
+                  <h1 className="text-yellow-400 font-bold text-lg sm:text-xl">
+                    Defacto
+                  </h1>
+                  <p className="text-gray-300 text-xs sm:text-sm tracking-wide">
+                    Institute | BHANIYAWALA
+                  </p>
+                </div>
               </Link>
             </div>
 
@@ -87,8 +106,8 @@ border-b border-white/10 backdrop-blur-md">
                     key={item.href}
                     href={item.href}
                     className={`transition-all duration-300 hover:text-yellow-400 ${isNavLinkActive(item.href)
-                        ? "text-yellow-400"
-                        : ""
+                      ? "text-yellow-400"
+                      : ""
                       }`}
                   >
                     {item.label}
@@ -145,8 +164,8 @@ border-b border-white/10 backdrop-blur-md">
         <div
           id="mobile-navigation"
           className={`fixed inset-0 z-[140] overflow-y-auto bg-slate-950/98 px-5 pb-8 pt-[calc(env(safe-area-inset-top)+1rem)] backdrop-blur-xl transition-all duration-300 sm:px-6 ${isOpen
-              ? "translate-y-0 opacity-100"
-              : "pointer-events-none -translate-y-4 opacity-0"
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-4 opacity-0"
             }`}
         >
           <div className="mx-auto flex max-w-md flex-col gap-5">
@@ -185,8 +204,8 @@ border-b border-white/10 backdrop-blur-md">
                     key={item.href}
                     href={item.href}
                     className={`flex items-center justify-between rounded-2xl px-4 py-3 text-base font-semibold transition-all duration-300 ${isNavLinkActive(item.href)
-                        ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20"
-                        : "bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
+                      ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20"
+                      : "bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
                       }`}
                   >
                     <span>{item.label}</span>

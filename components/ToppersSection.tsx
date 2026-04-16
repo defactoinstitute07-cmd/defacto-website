@@ -6,9 +6,8 @@ import { getOptimizedImageUrl } from "../lib/image-utils";
 type Topper = {
   _id: string;
   name: string;
-  classExam: string;
-  achievement: string;
-  year: string;
+  board: string;
+  studentClass: string;
   imageUrl: string;
 };
 
@@ -48,57 +47,59 @@ export default function ToppersSection() {
           <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
             Our Academic <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Champions</span>
           </h2>
-          <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
-            Celebrating the extraordinary dedication and success of our brightest students who have made us proud.
-          </p>
+
         </div>
 
-        {/* Toppers Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-          {toppers.map((topper, idx) => (
-            <div
-              key={topper._id}
-              className="group relative flex flex-col bg-white rounded-[2.5rem] border border-slate-100 p-4 shadow-xl shadow-slate-200/40 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-200/50 hover:-translate-y-2 overflow-hidden"
-              style={{ animationDelay: `${idx * 100}ms` }}
-            >
-              {/* Achievement Badge */}
-              <div className="absolute top-6 left-6 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1 rounded-full shadow-sm">
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">
-                  Batch {topper.year}
-                </span>
-              </div>
+        {/* Scrolling Marquee Container */}
+        <div className="relative flex overflow-hidden group">
+          {/* Fading Edges for Marquee */}
+          <div className="absolute top-0 left-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white/60 to-transparent z-10 pointer-events-none" />
+          <div className="absolute top-0 right-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white/60 to-transparent z-10 pointer-events-none" />
 
-              {/* Photo Container */}
-              <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-slate-100 mb-6">
-                <img
-                  src={getOptimizedImageUrl(topper.imageUrl, { width: 640 })}
-                  alt={topper.name}
-                  className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
-                  loading="lazy"
-                />
-                {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
-
-              {/* Content */}
-              <div className="text-center space-y-2 pb-2">
-                <h3 className="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {topper.name}
-                </h3>
-                <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.1em]">
-                  {topper.classExam}
-                </p>
-                <div className="pt-3">
-                  <span className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-lg rounded-2xl shadow-lg shadow-blue-500/30 inline-block transform group-hover:scale-105 transition-transform">
-                    {topper.achievement}
-                  </span>
+          {/* Marquee Track */}
+          <div
+            className="flex gap-6 md:gap-8 min-w-max hover:[animation-play-state:paused]"
+            style={{ animation: "slideMarquee 25s linear infinite" }}
+          >
+            {[...toppers, ...toppers].map((topper, idx) => (
+              <div
+                key={`${topper._id}-${idx}`}
+                className="w-[240px] sm:w-[280px] lg:w-[320px] flex-shrink-0 group/card relative flex flex-col bg-white rounded-[0px] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              >
+                {/* Photo Container */}
+                <div className="relative aspect-[4/5] rounded-[0px] overflow-hidden bg-gray-50">
+                  <img
+                    src={getOptimizedImageUrl(topper.imageUrl, { width: 640 })}
+                    alt={topper.name || "Topper"}
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
+                    loading="lazy"
+                  />
+                  {/* Subtle Dark Gradient Overlay on Hover for premium feel */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <h3 className="text-white text-xl md:text-2xl font-black transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 drop-shadow-lg">
+                      {topper.name}
+                    </h3>
+                    <p className="text-gray-300 text-sm font-medium transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 delay-75 mt-1 border-t border-white/20 pt-2">
+                      {topper.board} • {topper.studentClass}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Decorative Corner Glow */}
-              <div className="absolute -bottom-12 -right-12 w-24 h-24 rounded-full bg-blue-400 blur-[40px] opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-            </div>
-          ))}
+                {/* Minimalist Bottom Accent Line */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-300 origin-left" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* View All Button */}
+        <div className="mt-16 flex justify-center">
+          <a href="/toppers" className="group flex items-center gap-3 px-8 py-4 bg-slate-900 text-white font-bold rounded-full hover:bg-blue-600 transition-all duration-300 shadow-xl shadow-slate-900/20 hover:shadow-blue-600/30">
+            <span>View All Toppers</span>
+            <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

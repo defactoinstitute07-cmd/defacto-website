@@ -14,7 +14,7 @@ import Topper from "../../../models/Topper";
 export async function GET() {
   try {
     await connectDB();
-    const toppers = await Topper.find().sort({ year: -1, created_at: -1 }).lean();
+    const toppers = await Topper.find().sort({ created_at: -1 }).lean();
     return NextResponse.json({ toppers });
   } catch (error) {
     return handleRouteError(error, "Failed to load toppers.");
@@ -28,17 +28,15 @@ export async function POST(request: NextRequest) {
 
     const body = await parseJsonObject(request);
     const name = readText(body.name, { field: "Name", max: 100 });
-    const classExam = readText(body.classExam, { field: "Class/Exam", max: 100 });
-    const achievement = readText(body.achievement, { field: "Achievement", max: 160 });
-    const year = readText(body.year, { field: "Year", max: 20 });
+    const board = readText(body.board, { field: "Board", max: 50 });
+    const studentClass = readText(body.studentClass, { field: "Class", max: 50 });
     const imageUrl = readManagedImageUrl(body.imageUrl);
 
     await connectDB();
     const topper = await Topper.create({
       name,
-      classExam,
-      achievement,
-      year,
+      board,
+      studentClass,
       imageUrl,
     });
 
