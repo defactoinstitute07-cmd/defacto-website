@@ -4,12 +4,12 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   "media-src 'self' data: blob: https:",
-  "connect-src 'self' https://api.cloudinary.com https://res.cloudinary.com https://*.supabase.co https://*.supabase.in",
+  "connect-src 'self' https://api.cloudinary.com https://res.cloudinary.com https://*.supabase.co https://*.supabase.in https://vitals.vercel-insights.com",
 ].join("; ");
 
 /** @type {import('next').NextConfig} */
