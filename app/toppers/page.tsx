@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function TopersPage() {
   await connectDB();
   // Fetch all toppers sorted by recent
-  const toppers = await Topper.find().sort({ created_at: -1 }).lean();
+  const toppers = await Topper.find().sort({ created_at: 1 }).lean();
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 py-16">

@@ -14,7 +14,7 @@ import Topper from "../../../models/Topper";
 export async function GET() {
   try {
     await connectDB();
-    const toppers = await Topper.find().sort({ created_at: -1 }).lean();
+    const toppers = await Topper.find().sort({ created_at: 1 }).lean();
     return NextResponse.json({ toppers });
   } catch (error) {
     return handleRouteError(error, "Failed to load toppers.");
