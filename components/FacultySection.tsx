@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { getCloudinarySrcSet, getOptimizedImageUrl } from "../lib/image-utils";
 
-type Faculty = { id: string; name: string; designation: string; imageUrl: string };
+type Faculty = {
+  id: string;
+  name: string;
+  designation: string;
+  experience?: string;
+  imageUrl: string;
+};
 
 export default function FacultySection() {
   const [faculty, setFaculty] = useState<Faculty[]>([]);
@@ -56,7 +62,7 @@ export default function FacultySection() {
 
               {/* Image Container - CRITICAL FIX: Added aspect ratio */}
               {/* Mobile par square (aspect-square), badi screen par thoda lamba (aspect-[4/5]) */}
-              <div className="relative mb-5 w-full aspect-square sm:aspect-[4/5] overflow-hidden rounded-xl md:rounded-[0px]">
+              <div className="relative mb-5 w-full aspect-square overflow-hidden rounded-xl md:rounded-[0px]">
                 <img
                   src={getOptimizedImageUrl(f.imageUrl, { width: 640 })}
                   srcSet={getCloudinarySrcSet(f.imageUrl, [320, 480, 640, 800])}
@@ -77,6 +83,18 @@ export default function FacultySection() {
               <p className="text-xs md:text-sm font-semibold text-slate-500 mt-1 uppercase tracking-wider">
                 {f.designation}
               </p>
+
+              {/* Experience */}
+              {f.experience && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100 mt-3 group-hover:bg-amber-100 transition-colors duration-300 mb-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-[10px] md:text-xs font-bold whitespace-nowrap italic">
+                    {f.experience} Experience
+                  </span>
+                </div>
+              )}
 
               {/* Divider - Added interactive hover effect */}
               <div className="w-8 h-[3px] bg-amber-400 mt-4 mb-2 rounded-full opacity-80 transition-all duration-300 group-hover:w-16 group-hover:opacity-100"></div>

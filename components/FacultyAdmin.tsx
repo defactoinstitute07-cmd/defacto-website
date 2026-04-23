@@ -13,13 +13,18 @@ type Faculty = {
   id: string;
   name: string;
   designation: string;
+  experience?: string;
+  sequence?: number;
   imageUrl: string;
 };
 
 export default function FacultyAdmin() {
   const [faculty, setFaculty] = useState<Faculty[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
+  const [experience, setExperience] = useState("");
+  const [sequence, setSequence] = useState("0");
   const [imageUrl, setImageUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState("");
@@ -35,7 +40,28 @@ export default function FacultyAdmin() {
     setFaculty(data.faculty || []);
   }
 
-  async function handleAddFaculty(e: FormEvent<HTMLFormElement>) {
+  function handleEditClick(f: Faculty) {
+    setEditingId(f.id);
+    setName(f.name);
+    setDesignation(f.designation);
+    setExperience(f.experience || "");
+    setSequence(String(f.sequence || 0));
+    setImageUrl(f.imageUrl);
+    setStatus("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetForm() {
+    setEditingId(null);
+    setName("");
+    setDesignation("");
+    setExperience("");
+    setSequence("0");
+    setImageUrl("");
+    setStatus("");
+  }
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!imageUrl) {
       setStatus("Please upload an image.");
@@ -45,24 +71,37 @@ export default function FacultyAdmin() {
     setIsSaving(true);
     setStatus("");
 
-    const res = await fetch("/api/faculty", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, designation, imageUrl }),
-    });
+    try {
+      const url = "/api/faculty";
+      const method = editingId ? "PUT" : "POST";
+      const payload = {
+        id: editingId,
+        name,
+        designation,
+        experience,
+        sequence: Number(sequence),
+        imageUrl,
+      };
 
-    const data = await res.json();
-    if (res.ok) {
-      setFaculty(data.faculty || []);
-      setName("");
-      setDesignation("");
-      setImageUrl("");
-      setStatus("Faculty added.");
-    } else {
-      setStatus(data.error || "Failed to add faculty.");
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setFaculty(data.faculty || []);
+        resetForm();
+        setStatus(editingId ? "Faculty updated." : "Faculty added.");
+      } else {
+        setStatus(data.error || `Failed to ${editingId ? "update" : "add"} faculty.`);
+      }
+    } catch {
+      setStatus("An error occurred while saving.");
+    } finally {
+      setIsSaving(false);
     }
-
-    setIsSaving(false);
   }
 
   async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -142,12 +181,16 @@ export default function FacultyAdmin() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Faculty Management</h2>
-            <p className="text-slate-500 text-sm">Update your team of expert educators.</p>
+            <h2 className="text-2xl font-bold text-slate-900">
+              {editingId ? "Edit Faculty Profile" : "Faculty Management"}
+            </h2>
+            <p className="text-slate-500 text-sm">
+              {editingId ? "Modify details for this team member." : "Update your team of expert educators."}
+            </p>
           </div>
         </div>
 
-        <form onSubmit={handleAddFaculty} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
@@ -171,6 +214,32 @@ export default function FacultyAdmin() {
                 value={designation}
                 onChange={(e) => setDesignation(e.target.value)}
                 required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                Experience
+              </label>
+              <input
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all font-medium placeholder-slate-400"
+                placeholder="e.g., 10+ Years of Teaching"
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+              />
+            </div>
+            <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                Display Sequence
+              </label>
+              <input
+                type="number"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all font-medium placeholder-slate-400"
+                placeholder="Lower numbers appear first"
+                value={sequence}
+                onChange={(e) => setSequence(e.target.value)}
               />
             </div>
           </div>
@@ -204,13 +273,24 @@ export default function FacultyAdmin() {
 
           {status && <div className="text-sm font-bold text-amber-600 drop-shadow-sm">{status}</div>}
 
-          <button
-            type="submit"
-            disabled={isSaving || isUploading || !imageUrl}
-            className="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-black py-4 rounded-[1.5rem] transition-all shadow-xl shadow-amber-400/20 disabled:opacity-50 disabled:grayscale"
-          >
-            {isSaving ? "Saving Profile..." : "Add to Faculty Team"}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              type="submit"
+              disabled={isSaving || isUploading || !imageUrl}
+              className="flex-1 bg-amber-400 hover:bg-amber-500 text-slate-900 font-black py-4 rounded-[1.5rem] transition-all shadow-xl shadow-amber-400/20 disabled:opacity-50 disabled:grayscale"
+            >
+              {isSaving ? "Saving Profile..." : editingId ? "Update Faculty Profile" : "Add to Faculty Team"}
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-[1.5rem] transition-all"
+              >
+                Cancel Edit
+              </button>
+            )}
+          </div>
         </form>
       </div>
 
@@ -238,13 +318,32 @@ export default function FacultyAdmin() {
               <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
                 {f.designation}
               </p>
+              {f.experience && (
+                <p className="text-slate-400 text-[10px] font-bold mt-1">
+                  Exp: {f.experience}
+                </p>
+              )}
+              {f.sequence !== undefined && (
+                <p className="text-amber-500 text-[10px] font-bold">
+                  Seq: {f.sequence}
+                </p>
+              )}
 
-              <button
-                className="mt-6 text-[10px] font-black tracking-widest text-slate-400 hover:text-rose-600 transition-colors uppercase"
-                onClick={() => handleDelete(f.id)}
-              >
-                Remove Profile
-              </button>
+              <div className="mt-6 flex items-center gap-4">
+                <button
+                  className="text-[10px] font-black tracking-widest text-slate-400 hover:text-amber-600 transition-colors uppercase"
+                  onClick={() => handleEditClick(f)}
+                >
+                  Edit
+                </button>
+                <div className="w-[1px] h-3 bg-slate-200" />
+                <button
+                  className="text-[10px] font-black tracking-widest text-slate-400 hover:text-rose-600 transition-colors uppercase"
+                  onClick={() => handleDelete(f.id)}
+                >
+                  Remove
+                </button>
+              </div>
             </div>
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-100 to-transparent blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>

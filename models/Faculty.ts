@@ -3,7 +3,8 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 export interface IFaculty extends Document {
   name: string;
   designation: string;
-  image_url: string;
+  experience?: string;
+  sequence?: number;
   created_at: Date;
   updated_at: Date;
 }
@@ -24,6 +25,15 @@ const FacultySchema = new Schema<IFaculty>(
       trim: true,
       minlength: 2,
       maxlength: 100,
+    },
+    experience: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
+    sequence: {
+      type: Number,
+      default: 0,
     },
     image_url: {
       type: String,

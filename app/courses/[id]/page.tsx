@@ -70,6 +70,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
       displayTeachers = facultyDocs.map((doc) => ({
         name: doc.name,
         designation: doc.designation,
+        experience: doc.experience,
         imageUrl: doc.image_url,
       }));
     }
@@ -205,6 +206,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                         <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-1.5">
                           {teacher.designation}
                         </p>
+                        {teacher.experience && (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-100 mb-3 group-hover:bg-amber-100 transition-colors duration-300">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-[10px] font-bold whitespace-nowrap italic">
+                              {teacher.experience} Experience
+                            </span>
+                          </div>
+                        )}
                         <p className="text-xs text-slate-500 font-medium">Expert Mentor</p>
                       </div>
                     </div>
