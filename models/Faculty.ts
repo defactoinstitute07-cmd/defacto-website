@@ -5,6 +5,7 @@ export interface IFaculty extends Document {
   designation: string;
   experience?: string;
   sequence?: number;
+  image_url: string;
   created_at: Date;
   updated_at: Date;
 }
