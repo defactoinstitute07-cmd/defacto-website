@@ -69,6 +69,8 @@ import CoursesSection from "../components/CoursesSection";
 import StudentGallery from "../components/StudentGallery";
 import FloatingActions from "../components/FloatingActions";
 import ToppersSection from "../components/ToppersSection";
+import AlumniSection from "../components/AlumniSection";
+
 
 export const metadata: Metadata = buildMetadata({
   title: "Best Coaching Institute in Bhaniawala, Dehradun",
@@ -355,6 +357,7 @@ export default async function HomePage() {
       <CoursesSection />
       <ToppersSection />
       <FacultySection />
+      <AlumniSection />
       <StudentGallery />
 
       {/* Why Choose Us */}
