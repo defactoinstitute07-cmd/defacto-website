@@ -92,20 +92,19 @@ export default function ToppersSection() {
                 ))}
 
                 <div
-                  className="flex-shrink-0 flex items-center justify-center px-4 sm:px-8 aspect-[4/5]"
-                  style={{ width: "100px" }}
+                  className="flex-shrink-0 flex items-center justify-center px-2 sm:px-4 md:px-6 lg:px-8 aspect-[4/5] w-14 sm:w-20 md:w-24 lg:w-28 transition-all duration-300"
                 >
-                  <div className="flex items-center gap-4 h-full py-8">
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4 h-full py-4 sm:py-6 md:py-8">
                     {/* Subtle decorative line */}
                     <div className="w-px h-full bg-gradient-to-b from-transparent via-slate-200 to-transparent"></div>
 
                     {/* Bottom-to-Top Text */}
                     <span
-                      className="text-3xl sm:text-4xl font-light text-yellow-500 select-none whitespace-nowrap"
+                      className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-yellow-500 select-none whitespace-nowrap transition-all duration-300"
                       style={{
                         writingMode: "vertical-rl",
                         transform: "rotate(180deg)", /* घुमाने के लिए ताकि नीचे से ऊपर पढ़ा जाए */
-                        letterSpacing: "0.2em"
+                        letterSpacing: "0.15em" /* मोबाइल पर फिट होने के लिए हल्का सा कम किया गया */
                       }}
                     >
                       BATCH <span className="font-semibold text-red-400">2025–26</span>
