@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 export default async function TopersPage() {
   await connectDB();
-  // Fetch all toppers sorted by recent
-  const toppers = await Topper.find().sort({ created_at: 1 }).lean();
+  // Fetch all toppers sorted by percentage descending, then by date
+  const toppers = await Topper.find().sort({ percentage: -1, created_at: -1 }).lean();
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 py-16">
@@ -40,6 +40,7 @@ export default async function TopersPage() {
             const board = String(topper.board || "");
             const studentClass = String(topper.studentClass || "");
             const imageUrl = String(topper.imageUrl || "");
+            const percentage = topper.percentage != null ? Number(topper.percentage) : null;
             
             return (
               <div
@@ -60,6 +61,11 @@ export default async function TopersPage() {
                     <p className="text-gray-300 text-xs font-medium transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-75 mt-1 border-t border-white/20 pt-1.5">
                       {board} • {studentClass}
                     </p>
+                    {percentage !== null && (
+                      <span className="inline-block mt-1.5 px-2 py-0.5 bg-blue-500/90 text-white text-[10px] font-black rounded-full transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-100">
+                        {percentage}%
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />

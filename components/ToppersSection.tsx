@@ -8,6 +8,7 @@ type Topper = {
   name: string;
   board: string;
   studentClass: string;
+  percentage: number | null;
   imageUrl: string;
 };
 
@@ -52,44 +53,69 @@ export default function ToppersSection() {
 
         {/* Scrolling Marquee Container */}
         <div className="relative flex overflow-hidden group">
-          {/* Fading Edges for Marquee */}
-          <div className="absolute top-0 left-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-white/60 to-transparent z-10 pointer-events-none" />
-          <div className="absolute top-0 right-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-white/60 to-transparent z-10 pointer-events-none" />
 
-          {/* Marquee Track */}
+          {/* Marquee Track — two identical sets for seamless loop */}
           <div
             className="flex gap-6 md:gap-8 min-w-max hover:[animation-play-state:paused]"
             style={{ animation: "slideMarquee 25s linear infinite" }}
           >
-            {[...toppers, ...toppers].map((topper, idx) => (
-              <div
-                key={`${topper._id}-${idx}`}
-                className="w-[240px] sm:w-[280px] lg:w-[320px] flex-shrink-0 group/card relative flex flex-col bg-white rounded-[0px] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
-              >
-                {/* Photo Container */}
-                <div className="relative aspect-[4/5] rounded-[0px] overflow-hidden bg-gray-50">
-                  <img
-                    src={getOptimizedImageUrl(topper.imageUrl, { width: 640 })}
-                    alt={topper.name || "Topper"}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
-                    loading="lazy"
-                  />
-                  {/* Subtle Dark Gradient Overlay on Hover for premium feel */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                    <h3 className="text-white text-xl md:text-2xl font-black transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 drop-shadow-lg">
-                      {topper.name}
-                    </h3>
-                    <p className="text-gray-300 text-sm font-medium transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 delay-75 mt-1 border-t border-white/20 pt-2">
-                      {topper.board} • {topper.studentClass}
-                    </p>
+            {[0, 1].map((setIdx) => (
+              <React.Fragment key={setIdx}>
+                {toppers.map((topper, idx) => (
+                  <div
+                    key={`${topper._id}-${setIdx}-${idx}`}
+                    className="w-[240px] sm:w-[280px] lg:w-[320px] flex-shrink-0 group/card relative flex flex-col bg-white rounded-[0px] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                  >
+                    {/* Photo Container */}
+                    <div className="relative aspect-[4/5] rounded-[0px] overflow-hidden bg-gray-50">
+                      <img
+                        src={getOptimizedImageUrl(topper.imageUrl, { width: 640 })}
+                        alt={topper.name || "Topper"}
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
+                        loading="lazy"
+                      />
+                      {/* Subtle Dark Gradient Overlay on Hover for premium feel */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-black/20 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h3 className="text-white text-xl md:text-2xl font-black transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 drop-shadow-lg">
+                          {topper.name}
+                        </h3>
+                        <p className="text-gray-300 text-sm font-medium transform translate-y-4 group-hover/card:translate-y-0 opacity-0 group-hover/card:opacity-100 transition-all duration-300 delay-75 mt-1 border-t border-white/20 pt-2">
+                          {topper.board} • {topper.studentClass}
+                        </p>
+
+                      </div>
+                    </div>
+
+                    {/* Minimalist Bottom Accent Line */}
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-300 origin-left" />
+                  </div>
+                ))}
+
+                <div
+                  className="flex-shrink-0 flex items-center justify-center px-4 sm:px-8 aspect-[4/5]"
+                  style={{ width: "100px" }}
+                >
+                  <div className="flex items-center gap-4 h-full py-8">
+                    {/* Subtle decorative line */}
+                    <div className="w-px h-full bg-gradient-to-b from-transparent via-slate-200 to-transparent"></div>
+
+                    {/* Bottom-to-Top Text */}
+                    <span
+                      className="text-3xl sm:text-4xl font-light text-yellow-500 select-none whitespace-nowrap"
+                      style={{
+                        writingMode: "vertical-rl",
+                        transform: "rotate(180deg)", /* घुमाने के लिए ताकि नीचे से ऊपर पढ़ा जाए */
+                        letterSpacing: "0.2em"
+                      }}
+                    >
+                      BATCH <span className="font-semibold text-red-400">2025–26</span>
+                    </span>
                   </div>
                 </div>
-
-                {/* Minimalist Bottom Accent Line */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-300 origin-left" />
-              </div>
+              </React.Fragment>
             ))}
           </div>
+
         </div>
 
         {/* View All Button */}

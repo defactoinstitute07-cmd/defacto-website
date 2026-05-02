@@ -4,6 +4,7 @@ export interface ITopper extends Document {
   name: string;
   board: string;
   studentClass: string;
+  percentage?: number;
   imageUrl: string;
   created_at: Date;
   updated_at: Date;
@@ -26,6 +27,11 @@ const TopperSchema = new Schema<ITopper>(
       required: true,
       trim: true,
     },
+    percentage: {
+      type: Number,
+      min: 0,
+      max: 100,
+    },
     imageUrl: {
       type: String,
       required: true,
@@ -41,9 +47,11 @@ const TopperSchema = new Schema<ITopper>(
   }
 );
 
-TopperSchema.index({ created_at: -1 });
+TopperSchema.index({ percentage: -1, created_at: -1 });
 
-const Topper: Model<ITopper> =
-  mongoose.models.Topper || mongoose.model<ITopper>("Topper", TopperSchema);
+// Delete the cached model so schema changes (like adding `percentage`) are
+// always picked up — both in Next.js dev hot-reload and after a deployment.
+delete mongoose.models["Topper"];
+const Topper: Model<ITopper> = mongoose.model<ITopper>("Topper", TopperSchema);
 
 export default Topper;

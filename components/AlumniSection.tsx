@@ -55,41 +55,28 @@ export default function AlumniSection() {
           {alumni.map((a) => (
             <div
               key={a.id}
-              className="flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group"
+              className="relative aspect-[4/5] bg-gray-50 border border-gray-100 rounded-[0px] shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group"
             >
-              {/* Photo */}
-              <div className="relative aspect-[4/5] bg-gray-50 overflow-hidden">
-                <img
-                  src={getOptimizedImageUrl(a.imageUrl, { width: 640 })}
-                  alt={a.name || "Alumni"}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-
-              {/* Info */}
-              <div className="p-4 md:p-5 border-t border-gray-100 flex flex-col flex-grow">
-                <h3 className="text-base md:text-lg font-bold text-slate-800 leading-tight">
-                  {a.name}
-                </h3>
-
-                {/* line-clamp-2 ensures uniform card heights even if achievement text is too long */}
-                <p className="text-sm md:text-sm text-slate-500 mt-1.5 leading-snug line-clamp-2 flex-grow">
-                  {a.achievement}
-                </p>
-
-                {a.passingYear && (
-                  <div className="mt-4">
-                    <span className="inline-flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1">
-                      Batch {a.passingYear}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <img
+                src={getOptimizedImageUrl(a.imageUrl, { width: 640 })}
+                alt={a.name || "Alumni"}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           ))}
+
+          {/* Batch label — always after the last image */}
+          <div className="col-span-full flex items-center gap-6 pt-4">
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
+            <span className="text-2xl md:text-3xl font-black tracking-tight text-slate-800 whitespace-nowrap">
+              2025–26
+            </span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
+          </div>
         </div>
+
       </div>
     </section>
   );
