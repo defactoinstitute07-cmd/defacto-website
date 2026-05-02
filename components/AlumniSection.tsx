@@ -67,14 +67,7 @@ export default function AlumniSection() {
             </div>
           ))}
 
-          {/* Batch label — always after the last image */}
-          <div className="col-span-full flex items-center gap-6 pt-4">
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
-            <span className="text-2xl md:text-3xl font-black tracking-tight text-slate-800 whitespace-nowrap">
-              2025–26
-            </span>
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
-          </div>
+
         </div>
 
       </div>
