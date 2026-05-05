@@ -28,7 +28,27 @@ export default function FacultySection() {
     fetchFaculty();
   }, []);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <section className="relative py-16 md:py-24 bg-slate-50 px-4 sm:px-6 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-10 md:mb-16">
+            <div className="mx-auto h-10 md:h-12 w-64 bg-slate-200 animate-pulse rounded-xl" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white border border-slate-200 p-4 rounded-2xl md:rounded-[0px] flex flex-col items-center">
+                <div className="w-full aspect-square bg-slate-100 animate-pulse rounded-xl md:rounded-[0px] mb-5" />
+                <div className="h-6 w-32 bg-slate-100 animate-pulse rounded-md mb-2" />
+                <div className="h-4 w-24 bg-slate-50 animate-pulse rounded-md" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (!faculty.length) return null;
 
   return (

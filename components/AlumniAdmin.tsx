@@ -29,18 +29,22 @@ export default function AlumniAdmin() {
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchAlumni();
   }, []);
 
   async function fetchAlumni() {
+    setIsLoading(true);
     try {
       const res = await fetch("/api/alumni", { cache: "no-store" });
       const data = await res.json();
       setItems(data.alumni || []);
     } catch {
       setStatus("Failed to load alumni.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -308,7 +312,19 @@ export default function AlumniAdmin() {
 
       {/* Alumni Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((a) => (
+        {isLoading ? (
+          [...Array(6)].map((_, i) => (
+            <div key={i} className="bg-slate-50 border border-slate-100 rounded-[2rem] p-6 shadow-sm animate-pulse">
+              <div className="flex flex-col items-center">
+                <div className="h-24 w-24 bg-slate-200 rounded-3xl mb-4" />
+                <div className="h-5 w-32 bg-slate-200 rounded-md mb-2" />
+                <div className="h-4 w-48 bg-slate-100 rounded-md mb-3" />
+                <div className="h-4 w-20 bg-slate-100 rounded-full" />
+              </div>
+            </div>
+          ))
+        ) : (
+          items.map((a) => (
           <div
             key={a.id}
             className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm hover:shadow-xl relative group overflow-hidden transition-all hover:border-slate-300"
@@ -364,7 +380,7 @@ export default function AlumniAdmin() {
         ))}
       </div>
 
-      {items.length === 0 && (
+      {!isLoading && items.length === 0 && (
         <div className="text-center py-16 text-slate-400 text-sm font-medium">
           No alumni added yet. Add your first alumni above.
         </div>

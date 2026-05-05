@@ -28,6 +28,7 @@ export default function FacultyAdmin() {
   const [imageUrl, setImageUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
@@ -35,9 +36,16 @@ export default function FacultyAdmin() {
   }, []);
 
   async function fetchFaculty() {
-    const res = await fetch("/api/faculty", { cache: "no-store" });
-    const data = await res.json();
-    setFaculty(data.faculty || []);
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/faculty", { cache: "no-store" });
+      const data = await res.json();
+      setFaculty(data.faculty || []);
+    } catch {
+      setStatus("Failed to load faculty.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleEditClick(f: Faculty) {
@@ -295,7 +303,18 @@ export default function FacultyAdmin() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {faculty.map((f) => (
+        {isLoading ? (
+          [...Array(6)].map((_, i) => (
+            <div key={i} className="bg-slate-50 border border-slate-100 rounded-[2rem] p-6 shadow-sm animate-pulse">
+              <div className="flex flex-col items-center">
+                <div className="h-24 w-24 bg-slate-200 rounded-3xl mb-4" />
+                <div className="h-5 w-32 bg-slate-200 rounded-md mb-2" />
+                <div className="h-4 w-48 bg-slate-100 rounded-md" />
+              </div>
+            </div>
+          ))
+        ) : (
+          faculty.map((f) => (
           <div
             key={f.id}
             className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm hover:shadow-xl relative group overflow-hidden transition-all hover:border-slate-300"

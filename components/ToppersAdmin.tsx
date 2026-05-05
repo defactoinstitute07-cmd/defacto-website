@@ -30,18 +30,22 @@ export default function ToppersAdmin() {
   const [isSaving, setIsSaving] = useState(false);
   const [status, setStatus] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchToppers();
   }, []);
 
   async function fetchToppers() {
+    setIsLoading(true);
     try {
       const res = await fetch("/api/toppers", { cache: "no-store" });
       const data = await res.json();
       setItems(data.toppers || []);
     } catch {
       setStatus("Failed to load toppers.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -351,7 +355,12 @@ export default function ToppersAdmin() {
 
       {/* Toppers Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        {items.map((item) => (
+        {isLoading ? (
+          [...Array(8)].map((_, i) => (
+            <div key={i} className="aspect-[4/5] bg-slate-50 border border-slate-100 rounded-3xl animate-pulse" />
+          ))
+        ) : (
+          items.map((item) => (
           <div
             key={item._id}
             className="relative group bg-white border border-slate-200 rounded-3xl p-2 flex flex-col shadow-sm hover:shadow-md transition-shadow"
@@ -396,7 +405,7 @@ export default function ToppersAdmin() {
         ))}
       </div>
 
-      {items.length === 0 && (
+      {!isLoading && items.length === 0 && (
         <div className="text-center py-16 text-slate-400 text-sm font-medium">
           No toppers added yet. Add your first topper above.
         </div>
