@@ -402,7 +402,7 @@ export default function ToppersAdmin() {
               </button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {!isLoading && items.length === 0 && (

@@ -377,7 +377,7 @@ export default function AlumniAdmin() {
             </div>
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-50 to-transparent blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-        ))}
+        )))}
       </div>
 
       {!isLoading && items.length === 0 && (
